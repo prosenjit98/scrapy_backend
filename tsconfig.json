@@ -1,0 +1,12 @@
+{
+  "extends": "@adonisjs/tsconfig/tsconfig.app.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./build",
+    "baseUrl": ".",
+    "paths": {
+      "Admin/*": ["app/controllers/admin/*"]
+    }
+  },
+  "exclude": ["./inertia/**/*", "node_modules", "build"]
+}
