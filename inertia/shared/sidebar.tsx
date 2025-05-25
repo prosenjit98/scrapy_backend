@@ -64,11 +64,11 @@ export default function Sidebar() {
               <ListItemIcon><DashboardIcon /></ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
-            <ListItemButton>
+            <ListItemButton href='users'>
               <ListItemIcon><PeopleIcon /></ListItemIcon>
               <ListItemText primary="Users" />
             </ListItemButton>
-            <ListItemButton>
+            <ListItemButton href='vendors'>
               <ListItemIcon><PeopleIcon /></ListItemIcon>
               <ListItemText primary="Vendors" />
             </ListItemButton>

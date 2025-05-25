@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, scope } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 
@@ -44,5 +44,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
     table: 'auth_access_tokens',
     type: 'auth_token',
     tokenSecretLength: 40,
+  })
+
+  static vendors = scope((query) => {
+    query.where('role', 'vendor')
+  })
+
+  static users = scope((query) => {
+    query.where('role', 'user')
   })
 }
