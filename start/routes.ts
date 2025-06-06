@@ -12,6 +12,7 @@ const AuthController = () => import('#controllers/admin/auth_controller')
 const AdminDashboardController = () => import('#controllers/admin/dashboard_controller')
 const AdminUsersController = () => import('#controllers/admin/users_controller')
 const AdminVendorsController = () => import('#controllers/admin/vendors_controller')
+const ApiSessionController = () => import('#controllers/api/auth_controller')
 
 router
   .group(() => {
@@ -38,4 +39,28 @@ router
   })
   .prefix('/admin')
 
-router.on('/').renderInertia('home')
+router
+  .group(() => {
+    router.post('/login', [ApiSessionController, 'login']).as('api.login')
+    router.post('/signup', [ApiSessionController, 'signup']).as('api.signup')
+
+    router
+      .group(() => {
+        router.delete('/logout', [ApiSessionController, 'logout'])
+      })
+      .middleware(async ({ auth, response }, next) => {
+        await auth.use('api').check()
+        if (!auth.use('api').isAuthenticated) {
+          return response.unauthorized({ message: 'Unauthorized' })
+        }
+        await next()
+      })
+  })
+  .prefix('/api/v1')
+
+// router.on('/').renderInertia('home')
+router.any('*', async ({ request, response }) => {
+  return response.notFound({
+    message: `Route not found: ${request.method()} ${request.url()}`,
+  })
+})
