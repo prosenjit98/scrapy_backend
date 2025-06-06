@@ -13,6 +13,7 @@ const AdminDashboardController = () => import('#controllers/admin/dashboard_cont
 const AdminUsersController = () => import('#controllers/admin/users_controller')
 const AdminVendorsController = () => import('#controllers/admin/vendors_controller')
 const ApiSessionController = () => import('#controllers/api/auth_controller')
+const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
 
 router
   .group(() => {
@@ -47,6 +48,7 @@ router
     router
       .group(() => {
         router.delete('/logout', [ApiSessionController, 'logout'])
+        router.get('/dashboard', [ApiDashboardController, 'index']).as('api.dashboard')
       })
       .middleware(async ({ auth, response }, next) => {
         await auth.use('api').check()
