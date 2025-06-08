@@ -14,17 +14,22 @@ import {
 import MenuIcon from '@mui/icons-material/Menu'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import PeopleIcon from '@mui/icons-material/People'
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { useForm } from '@inertiajs/react'
+import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
+import { useForm, usePage } from '@inertiajs/react'
 
 const drawerWidth = 240
 
 
 export default function Sidebar() {
   const { post } = useForm()
+  const { url } = usePage();
   const handleLogout = () => {
    post('/admin/logout') // Or use Inertia form post
   }
+
+  console.log(url)
 
   return (
     <>
@@ -60,17 +65,25 @@ export default function Sidebar() {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            <ListItemButton>
+            <ListItemButton href='dashboard' selected={'/admin/dashboard' === url ? true : false}>
               <ListItemIcon><DashboardIcon /></ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
-            <ListItemButton href='users'>
+            <ListItemButton href='users' selected={'/admin/users' === url ? true : false}>
               <ListItemIcon><PeopleIcon /></ListItemIcon>
               <ListItemText primary="Users" />
             </ListItemButton>
-            <ListItemButton href='vendors'>
+            <ListItemButton href='vendors' selected={'/admin/vendors' === url ? true : false}>
               <ListItemIcon><PeopleIcon /></ListItemIcon>
               <ListItemText primary="Vendors" />
+            </ListItemButton>
+            <ListItemButton href='vehicles' selected={'/admin/vehicles' === url ? true : false}>
+              <ListItemIcon><DirectionsCarIcon /></ListItemIcon>
+              <ListItemText primary="Vehicles" />
+            </ListItemButton>
+            <ListItemButton href='parts' selected={'/admin/parts' === url ? true : false}>
+              <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
+              <ListItemText primary="Parts" />
             </ListItemButton>
             <Divider />
             <ListItemButton onClick={handleLogout}>

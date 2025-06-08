@@ -8,12 +8,18 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import { middleware } from './kernel.js'
 const AuthController = () => import('#controllers/admin/auth_controller')
 const AdminDashboardController = () => import('#controllers/admin/dashboard_controller')
 const AdminUsersController = () => import('#controllers/admin/users_controller')
 const AdminVendorsController = () => import('#controllers/admin/vendors_controller')
+const AdminVehiclesController = () => import('#controllers/admin/vehicles_controller')
+
 const ApiSessionController = () => import('#controllers/api/auth_controller')
 const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
+const ApiUsersController = () => import('#controllers/api/users_controller')
+// const ApiVehiclesController = () => import('#controllers/api/vehicles_controller')
+// const ApiPartsController = () => import('#controllers/api/parts_controller')
 
 router
   .group(() => {
@@ -28,13 +34,16 @@ router
         router.resource('/users', AdminUsersController)
         router.get('/vendors/list', [AdminVendorsController, 'list']).as('admin.vendors.list')
         router.resource('/vendors', AdminVendorsController).only(['index'])
+        router.get('/vehicles/list', [AdminVehiclesController, 'list']).as('admin.vehicles.list')
+        router.resource('/vehicles', AdminVehiclesController).as('admin.vehicles')
+        router.get('/parts/list', [AdminVehiclesController, 'list']).as('admin.parts.list')
+        router.resource('/parts', AdminVehiclesController)
       })
       .middleware(async ({ auth, response }, next) => {
         await auth.use('admin_web').check()
         if (!auth.use('admin_web').isAuthenticated) {
           return response.redirect('/admin/login')
         }
-        console.log(auth)
         await next()
       })
   })
@@ -49,14 +58,13 @@ router
       .group(() => {
         router.delete('/logout', [ApiSessionController, 'logout'])
         router.get('/dashboard', [ApiDashboardController, 'index']).as('api.dashboard')
+        router.resource('/users', ApiUsersController).only(['update']).as('api.users')
       })
-      .middleware(async ({ auth, response }, next) => {
-        await auth.use('api').check()
-        if (!auth.use('api').isAuthenticated) {
-          return response.unauthorized({ message: 'Unauthorized' })
-        }
-        await next()
-      })
+      .use(
+        middleware.auth({
+          guards: ['api'],
+        })
+      )
   })
   .prefix('/api/v1')
 

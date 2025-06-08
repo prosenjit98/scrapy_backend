@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import { signUpValidator } from '#validators/signup'
+import Attachment from '#models/attachment'
 
 export default class AuthController {
   public async login({ request, auth, response }: HttpContext) {
@@ -10,7 +11,7 @@ export default class AuthController {
       const token = await auth.use('api').createToken(user)
 
       return response.ok({
-        role: user.role,
+        message: 'User registered successfully',
         token: token.toJSON(),
         user,
       })
@@ -27,9 +28,20 @@ export default class AuthController {
 
   async signup({ request, response }: HttpContext) {
     try {
+      const avatar = request.file('avatar')!
       const payload = await request.validateUsing(signUpValidator)
 
       const user = await User.create(payload)
+
+      if (avatar) {
+        const existingPic = await user.related('profilePicture').query().first()
+        if (existingPic) {
+          existingPic.delete()
+        }
+        await Attachment.attach(user, avatar)
+      }
+
+      await user.load('profilePicture')
       const token = await User.accessTokens.create(user)
 
       return response.created({

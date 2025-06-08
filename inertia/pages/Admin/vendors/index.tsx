@@ -15,7 +15,7 @@ interface User {
   role: 'user' | 'vendor'
 }
 
-export default function UsersPage() {
+export default function VendorPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editUser, setEditUser] = useState<User | undefined>(undefined)
 
