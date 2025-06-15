@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import Attachment from './attachment.js'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import VehicleMake from './vehicle_make.js'
+import VehicleModel from './vehicles_model.js'
 
 export default class Part extends BaseModel {
   @column({ isPrimary: true })
@@ -24,6 +26,12 @@ export default class Part extends BaseModel {
   declare createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @belongsTo(() => VehicleMake, { foreignKey: 'makeId' })
+  declare make: BelongsTo<typeof VehicleMake>
+
+  @belongsTo(() => VehicleModel, { foreignKey: 'modelId' })
+  declare model: BelongsTo<typeof VehicleModel>
 
   @hasMany(() => Attachment)
   declare images: HasMany<typeof Attachment>
