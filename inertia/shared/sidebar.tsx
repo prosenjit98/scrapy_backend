@@ -86,6 +86,15 @@ export default function Sidebar() {
               <ListItemText primary="Parts" />
             </ListItemButton>
             <Divider />
+            <ListItemButton href='vehicle_makes' selected={'/admin/vehicle_makes' === url ? true : false}>
+              <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
+              <ListItemText primary="Makes" />
+            </ListItemButton>
+            <ListItemButton href='vehicle_models' selected={'/admin/vehicle_models' === url ? true : false}>
+              <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
+              <ListItemText primary="Models" />
+            </ListItemButton>
+            <Divider />
             <ListItemButton onClick={handleLogout}>
               <ListItemIcon><LogoutIcon /></ListItemIcon>
               <ListItemText primary="Logout" />

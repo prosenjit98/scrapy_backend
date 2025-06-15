@@ -14,6 +14,8 @@ const AdminDashboardController = () => import('#controllers/admin/dashboard_cont
 const AdminUsersController = () => import('#controllers/admin/users_controller')
 const AdminVendorsController = () => import('#controllers/admin/vendors_controller')
 const AdminVehiclesController = () => import('#controllers/admin/vehicles_controller')
+const AdminVehiclesMakeController = () => import('#controllers/admin/vehicle_makes_controller')
+const AdminVehicleModelController = () => import('#controllers/admin/vehicle_models_controller')
 
 const ApiSessionController = () => import('#controllers/api/auth_controller')
 const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
@@ -38,6 +40,14 @@ router
         router.resource('/vehicles', AdminVehiclesController).as('admin.vehicles')
         router.get('/parts/list', [AdminVehiclesController, 'list']).as('admin.parts.list')
         router.resource('/parts', AdminVehiclesController)
+        router
+          .get('/vehicle_makes/list', [AdminVehiclesMakeController, 'list'])
+          .as('admin.vehicle_makes.list')
+        router
+          .get('/vehicle_models/list', [AdminVehicleModelController, 'list'])
+          .as('admin.vehicle_models.list')
+        router.resource('/vehicle_makes', AdminVehiclesMakeController)
+        router.resource('/vehicle_models', AdminVehicleModelController)
       })
       .middleware(async ({ auth, response }, next) => {
         await auth.use('admin_web').check()

@@ -46,5 +46,9 @@ export default class extends BaseSchema {
       table.dropColumn('vehicle_make_id')
       table.dropColumn('vehicle_model_id')
     })
+    this.schema.alterTable('vehicles', (table) => {
+      table.dropColumn('vehicle_make_id')
+      table.dropColumn('vehicle_model_id')
+    })
   }
 }

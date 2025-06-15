@@ -3,7 +3,7 @@ import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import Attachment from './attachment.js'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import VehicleMake from './vehicle_make.js'
-import VehicleModel from './vehicles_model.js'
+import VehicleModel from './vehicle_model.js'
 
 export default class Part extends BaseModel {
   @column({ isPrimary: true })
