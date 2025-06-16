@@ -1,11 +1,14 @@
 
 import React, { useState, useEffect } from 'react'
-import { Modal, Box, Typography, TextField, Button, Stack} from '@mui/material'
+import { Modal, Box, Typography, TextField, Button, Stack, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material'
 import { router } from '@inertiajs/react'
+import axios from 'axios'
+import VehicleMake from '#models/vehicle_make'
 
 interface VehicleModel {
   id?: number
-  name: string
+  name: string,
+  vehicle_make_id?: number,
 }
 
 interface Props {
@@ -27,19 +30,34 @@ const style = {
 }
 
 export default function VehicleMakeFormModal({ open, onClose, initialData }: Props) {
-  const [form, setForm] = useState<VehicleModel>({ name: ''})
+  const [form, setForm] = useState<VehicleModel>({ name: '', vehicle_make_id: undefined })
+  const [_, setMakeFetching] = useState(false);
+  const [vMake, setVMake] = useState<VehicleMake[]>()
 
+  useEffect(() => {
+    setMakeFetching(true)
+    console.log("00000000000")
+    axios.get('/admin/vehicle_makes/list', {params: { limit: 10000 }},).then((res) => {
+      console.log(res.data)
+      setVMake(res.data.data)
+      setMakeFetching(false)
+    }).catch((e) => console.log(e))
+  }, [])
 
   useEffect(() => {
     if (initialData) {
       setForm(initialData)
     } else {
-      setForm({ name: '' })
+      setForm({ name: '', vehicle_make_id: undefined })
     }
   }, [initialData])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
+  }
+  const handleSelectChange = (event: SelectChangeEvent<number | string>) => {
+    const { name, value } = event.target;
+    setForm({ ...form, [name as string]: value });
   }
 
   const handleSubmit = () => {
@@ -59,7 +77,7 @@ export default function VehicleMakeFormModal({ open, onClose, initialData }: Pro
     <Modal open={open} onClose={onClose}>
       <Box sx={style}>
         <Typography variant="h6" mb={2}>
-          {form.id ? `Edit Vehicle Model` : `Add Vehicle Model` }
+          {form.id ? `Edit Vehicle Model` : `Add Vehicle Model`}
         </Typography>
         <Stack spacing={2}>
           <TextField
@@ -69,6 +87,22 @@ export default function VehicleMakeFormModal({ open, onClose, initialData }: Pro
             value={form.name}
             onChange={handleChange}
           />
+          <FormControl fullWidth>
+            <InputLabel id="vehicle-make-label">Vehicle Make</InputLabel>
+            <Select
+              labelId="vehicle-make-label"
+              name='vehicle_make_id'
+              id="vehicle_make"
+              value={form.vehicle_make_id}
+              label="Vehicle Make"
+              onChange={handleSelectChange}
+            >
+              {vMake && vMake.map((element: VehicleMake) => {
+                return <MenuItem value={element.id}>{element.name}</MenuItem>
+              })
+              }
+            </Select>
+          </FormControl>
           <Button onClick={handleSubmit} variant="contained">
             Submit
           </Button>

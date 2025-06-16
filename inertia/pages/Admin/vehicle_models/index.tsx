@@ -8,6 +8,7 @@ import VehicleMakeFormModal from './vehicle_model_form_modal'
 interface VehicleModel {
   id?: number
   name: string
+  vehicle_make: string
 }
 
 export default function VehicleModelsPage() {
@@ -30,6 +31,7 @@ export default function VehicleModelsPage() {
         columns={[
           { label: 'ID', key: 'id' },
           { label: 'Name', key: 'name' },
+          { label: 'Make', key: 'vehicle_make'},
         ]}
         actions={(make: VehicleModel) => (
           <>

@@ -15,6 +15,8 @@ import MenuIcon from '@mui/icons-material/Menu'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import PeopleIcon from '@mui/icons-material/People'
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
+import GarageIcon from '@mui/icons-material/Garage'
+import SettingsRemoteIcon from '@mui/icons-material/SettingsRemote';
 import LogoutIcon from '@mui/icons-material/Logout'
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly'
 import { useForm, usePage } from '@inertiajs/react'
@@ -87,11 +89,11 @@ export default function Sidebar() {
             </ListItemButton>
             <Divider />
             <ListItemButton href='vehicle_makes' selected={'/admin/vehicle_makes' === url ? true : false}>
-              <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
+              <ListItemIcon><GarageIcon /></ListItemIcon>
               <ListItemText primary="Makes" />
             </ListItemButton>
             <ListItemButton href='vehicle_models' selected={'/admin/vehicle_models' === url ? true : false}>
-              <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
+              <ListItemIcon><SettingsRemoteIcon /></ListItemIcon>
               <ListItemText primary="Models" />
             </ListItemButton>
             <Divider />
