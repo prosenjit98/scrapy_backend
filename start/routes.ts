@@ -14,6 +14,7 @@ const AdminDashboardController = () => import('#controllers/admin/dashboard_cont
 const AdminUsersController = () => import('#controllers/admin/users_controller')
 const AdminVendorsController = () => import('#controllers/admin/vendors_controller')
 const AdminVehiclesController = () => import('#controllers/admin/vehicles_controller')
+const AdminPartsController = () => import('#controllers/admin/parts_controller')
 const AdminVehiclesMakeController = () => import('#controllers/admin/vehicle_makes_controller')
 const AdminVehicleModelController = () => import('#controllers/admin/vehicle_models_controller')
 
@@ -38,8 +39,8 @@ router
         router.resource('/vendors', AdminVendorsController).only(['index'])
         router.get('/vehicles/list', [AdminVehiclesController, 'list']).as('admin.vehicles.list')
         router.resource('/vehicles', AdminVehiclesController).as('admin.vehicles')
-        router.get('/parts/list', [AdminVehiclesController, 'list']).as('admin.parts.list')
-        router.resource('/parts', AdminVehiclesController)
+        router.get('/parts/list', [AdminPartsController, 'list']).as('admin.parts.list')
+        router.resource('/parts', AdminPartsController).as('admin.parts')
         router
           .get('/vehicle_makes/list', [AdminVehiclesMakeController, 'list'])
           .as('admin.vehicle_makes.list')
