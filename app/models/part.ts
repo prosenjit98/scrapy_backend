@@ -27,10 +27,16 @@ export default class Part extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @belongsTo(() => VehicleMake, { foreignKey: 'makeId' })
+  @column({ serializeAs: null })
+  declare vehicleMakeId: number
+
+  @column({ serializeAs: null })
+  declare vehicleModelId: number
+
+  @belongsTo(() => VehicleMake, { foreignKey: 'vehicleMakeId' })
   declare make: BelongsTo<typeof VehicleMake>
 
-  @belongsTo(() => VehicleModel, { foreignKey: 'modelId' })
+  @belongsTo(() => VehicleModel, { foreignKey: 'vehicleModelId' })
   declare model: BelongsTo<typeof VehicleModel>
 
   @hasMany(() => Attachment)

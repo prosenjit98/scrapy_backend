@@ -14,15 +14,22 @@ export default class Vehicle extends BaseModel {
 
   @column()
   declare year: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @belongsTo(() => VehicleMake, { foreignKey: 'makeId' })
+  @column({ serializeAs: null })
+  declare vehicleMakeId: number
+
+  @column({ serializeAs: null })
+  declare vehicleModelId: number
+
+  @belongsTo(() => VehicleMake, { foreignKey: 'vehicleMakeId' })
   declare make: BelongsTo<typeof VehicleMake>
 
-  @belongsTo(() => VehicleModel, { foreignKey: 'modelId' })
+  @belongsTo(() => VehicleModel, { foreignKey: 'vehicleModelId' })
   declare model: BelongsTo<typeof VehicleModel>
 
   @belongsTo(() => User, { foreignKey: 'vendorId' })

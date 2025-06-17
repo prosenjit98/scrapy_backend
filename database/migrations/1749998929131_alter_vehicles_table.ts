@@ -2,7 +2,7 @@ import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
   protected tableName_1 = 'vehicle_makes'
-  protected tableName_2 = 'vehicles_models'
+  protected tableName_2 = 'vehicle_models'
 
   async up() {
     this.schema.alterTable('parts', (table) => {

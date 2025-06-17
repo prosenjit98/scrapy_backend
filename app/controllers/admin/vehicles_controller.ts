@@ -21,6 +21,12 @@ export default class VehiclesController {
       .preload('vendor', (vehicleQuery) => {
         vehicleQuery.select('fullName')
       })
+      .preload('model', (vehicleQuery) => {
+        vehicleQuery.select('name').as('vehicle_model')
+      })
+      .preload('make', (vehicleMake) => {
+        vehicleMake.select('name').as('vehicle_make')
+      })
       .paginate(page, limit)
 
     const vehicles = vehiclesPage.serialize()
@@ -30,6 +36,8 @@ export default class VehiclesController {
       return {
         ...vehicle,
         vendor_full_name: vehicle.vendor?.fullName ?? null,
+        make: vehicle.make?.name ?? null,
+        model: vehicle.model?.name ?? null,
       }
     })
     return vehicles
