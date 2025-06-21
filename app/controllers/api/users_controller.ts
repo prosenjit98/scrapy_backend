@@ -2,7 +2,7 @@ import Attachment from '#models/attachment'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
-export default class DashboardController {
+export default class UsersController {
   public async update({ request, auth, response }: HttpContext) {
     const user = auth?.user as User
     try {

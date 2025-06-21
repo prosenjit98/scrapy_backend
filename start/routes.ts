@@ -21,8 +21,8 @@ const AdminVehicleModelController = () => import('#controllers/admin/vehicle_mod
 const ApiSessionController = () => import('#controllers/api/auth_controller')
 const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
 const ApiUsersController = () => import('#controllers/api/users_controller')
-// const ApiVehiclesController = () => import('#controllers/api/vehicles_controller')
-// const ApiPartsController = () => import('#controllers/api/parts_controller')
+const ApiVehiclesController = () => import('#controllers/api/vehicles_controller')
+const ApiPartsController = () => import('#controllers/api/parts_controller')
 
 router
   .group(() => {
@@ -70,6 +70,10 @@ router
         router.delete('/logout', [ApiSessionController, 'logout'])
         router.get('/dashboard', [ApiDashboardController, 'index']).as('api.dashboard')
         router.resource('/users', ApiUsersController).only(['update']).as('api.users')
+        router.resource('/vehicles', ApiVehiclesController).apiOnly().as('api.vehicles')
+        router.resource('/parts', ApiPartsController).apiOnly().as('api.parts')
+        router.get('/models', [ApiVehiclesController, 'models']).as('api.models')
+        router.get('/makes', [ApiVehiclesController, 'makes']).as('api.makes')
       })
       .use(
         middleware.auth({

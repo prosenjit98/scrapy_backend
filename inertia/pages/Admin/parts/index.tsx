@@ -42,6 +42,9 @@ export default function PartsPage() {
           { label: 'Name', key: 'name' },
           { label: 'Make', key: 'make' },
           { label: 'Model', key: 'model' },
+          { label: 'Condition', key: 'condition' },
+          { label: 'Price', key: 'price' },
+          { label: 'Stock', key: 'stock' },
           { label: 'Vendor', key: 'vendor_full_name' },
         ]}
         // actions={(user: User) => (

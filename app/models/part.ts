@@ -22,7 +22,7 @@ export default class Part extends BaseModel {
   @column()
   declare isAvailable: boolean
   @column()
-  declare stock: number
+  declare stock: number | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true })
