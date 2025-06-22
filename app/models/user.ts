@@ -1,11 +1,13 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, hasOne, scope } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, hasOne, scope } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import Attachment from './attachment.js'
-import type { HasOne } from '@adonisjs/lucid/types/relations'
+import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+import Part from './part.js'
+import Proposal from './proposal.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -47,6 +49,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
     },
   })
   declare profilePicture: HasOne<typeof Attachment>
+
+  @hasMany(() => Part, {})
+  declare parts: HasMany<typeof Part>
+
+  @hasMany(() => Proposal, {})
+  declare proposals: HasMany<typeof Proposal>
 
   // static async preComputeUrls(models: User | User[]) {
   //   if (Array.isArray(models)) {

@@ -17,12 +17,14 @@ const AdminVehiclesController = () => import('#controllers/admin/vehicles_contro
 const AdminPartsController = () => import('#controllers/admin/parts_controller')
 const AdminVehiclesMakeController = () => import('#controllers/admin/vehicle_makes_controller')
 const AdminVehicleModelController = () => import('#controllers/admin/vehicle_models_controller')
+const AdminProposalsController = () => import('#controllers/admin/proposals_controller')
 
 const ApiSessionController = () => import('#controllers/api/auth_controller')
 const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
 const ApiUsersController = () => import('#controllers/api/users_controller')
 const ApiVehiclesController = () => import('#controllers/api/vehicles_controller')
 const ApiPartsController = () => import('#controllers/api/parts_controller')
+const ApiProposalsController = () => import('#controllers/api/proposals_controller')
 
 router
   .group(() => {
@@ -49,6 +51,8 @@ router
           .as('admin.vehicle_models.list')
         router.resource('/vehicle_makes', AdminVehiclesMakeController)
         router.resource('/vehicle_models', AdminVehicleModelController)
+        router.get('/proposals/list', [AdminProposalsController, 'list']).as('admin.proposals.list')
+        router.resource('/proposals', AdminProposalsController).as('admin.proposals')
       })
       .middleware(async ({ auth, response }, next) => {
         await auth.use('admin_web').check()
@@ -74,6 +78,7 @@ router
         router.resource('/parts', ApiPartsController).apiOnly().as('api.parts')
         router.get('/models', [ApiVehiclesController, 'models']).as('api.models')
         router.get('/makes', [ApiVehiclesController, 'makes']).as('api.makes')
+        router.resource('/proposals', ApiProposalsController).as('api.proposals')
       })
       .use(
         middleware.auth({
