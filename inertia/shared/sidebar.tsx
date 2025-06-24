@@ -91,6 +91,10 @@ export default function Sidebar() {
               <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
               <ListItemText primary="Proposals" />
             </ListItemButton>
+            <ListItemButton href='inquiries' selected={'/admin/inquiries' === url ? true : false}>
+              <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
+              <ListItemText primary="Inquiries" />
+            </ListItemButton>
             <Divider />
             <ListItemButton href='vehicle_makes' selected={'/admin/vehicle_makes' === url ? true : false}>
               <ListItemIcon><GarageIcon /></ListItemIcon>

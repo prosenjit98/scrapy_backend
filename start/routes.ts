@@ -18,6 +18,7 @@ const AdminPartsController = () => import('#controllers/admin/parts_controller')
 const AdminVehiclesMakeController = () => import('#controllers/admin/vehicle_makes_controller')
 const AdminVehicleModelController = () => import('#controllers/admin/vehicle_models_controller')
 const AdminProposalsController = () => import('#controllers/admin/proposals_controller')
+const AdminInquiriesController = () => import('#controllers/admin/inquiries_controller')
 
 const ApiSessionController = () => import('#controllers/api/auth_controller')
 const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
@@ -53,6 +54,8 @@ router
         router.resource('/vehicle_models', AdminVehicleModelController)
         router.get('/proposals/list', [AdminProposalsController, 'list']).as('admin.proposals.list')
         router.resource('/proposals', AdminProposalsController).as('admin.proposals')
+        router.get('/inquiries/list', [AdminInquiriesController, 'list']).as('admin.inquiries.list')
+        router.resource('/inquiries', AdminInquiriesController).as('admin.inquiries')
       })
       .middleware(async ({ auth, response }, next) => {
         await auth.use('admin_web').check()
