@@ -12,6 +12,7 @@ const AuthController = () => import('#controllers/admin/auth_controller')
 const AdminDashboardController = () => import('#controllers/admin/dashboard_controller')
 const AdminUsersController = () => import('#controllers/admin/users_controller')
 const AdminVendorsController = () => import('#controllers/admin/vendors_controller')
+const UserAuthController = () => import('#controllers/user_auth_controller')
 
 router
   .group(() => {
@@ -38,4 +39,13 @@ router
   })
   .prefix('/admin')
 
-router.on('/').renderInertia('home')
+router.on('/').renderInertia('public/home2')
+router.get('/login', [UserAuthController, 'showLogin']).as('login')
+router.post('/login', [UserAuthController, 'login'])
+router.post('/logout', [UserAuthController, 'logout'])
+router.get('/signup', [UserAuthController, 'showSignup']).as('signup')
+router.post('/sign-up', [UserAuthController, 'signup'])
+router.get('/forgot-password', 'AuthController.showForgotPassword').as('forgot-password')
+router.post('/forgot-password', 'AuthController.forgotPassword')
+router.get('/reset-password/:token', 'AuthController.showResetPassword').as('reset-password')
+router.post('/reset-password', 'AuthController.resetPassword')
