@@ -15,7 +15,7 @@ export default class UserAuthController {
       await auth.use('web').login(user)
       session.flash('success', 'Logged in successfully')
       console.log('User logged in:', session.flashMessages)
-      return inertia.render('public/home2', {
+      return inertia.render('public/home', {
         user: {
           id: user.id,
           name: user.fullName,
@@ -33,7 +33,7 @@ export default class UserAuthController {
   public async logout({ auth, response, session, inertia }: HttpContext) {
     await auth.use('web').logout()
     session.flash('success', 'Logged out in successfully')
-    return inertia.render('public/home2', {
+    return inertia.render('public/home', {
       user: null,
     })
   }
@@ -54,7 +54,7 @@ export default class UserAuthController {
       })
       await auth.use('web').login(user)
       session.flash('success', 'Account created successfully')
-      return inertia.render('public/home2', {
+      return inertia.render('public/home', {
         user: {
           id: user.id,
           name: user.fullName,

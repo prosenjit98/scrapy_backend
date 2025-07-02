@@ -68,7 +68,7 @@ router
   })
   .prefix('/admin')
 
-router.on('/').renderInertia('public/home2')
+router.on('/').renderInertia('public/home')
 router.get('/login', [UserAuthController, 'showLogin']).as('login')
 router.post('/login', [UserAuthController, 'login'])
 router.post('/logout', [UserAuthController, 'logout'])
