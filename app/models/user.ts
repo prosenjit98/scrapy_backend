@@ -1,9 +1,13 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, scope } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, hasOne, scope } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
+import Attachment from './attachment.js'
+import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+import Part from './part.js'
+import Proposal from './proposal.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -37,6 +41,31 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare phoneNumber: string | null
+
+  @hasOne(() => Attachment, {
+    foreignKey: 'attachableId',
+    onQuery(query) {
+      query.where('attachable_type', 'User')
+    },
+  })
+  declare profilePicture: HasOne<typeof Attachment>
+
+  @hasMany(() => Part, {})
+  declare parts: HasMany<typeof Part>
+
+  @hasMany(() => Proposal, {})
+  declare proposals: HasMany<typeof Proposal>
+
+  // static async preComputeUrls(models: User | User[]) {
+  //   if (Array.isArray(models)) {
+  //     await Promise.all(models.map((model) => this.preComputeUrls(model)))
+  //     return
+  //   }
+  //   console.log(models.avatar)
+  //   // compute url for original file
+  //   if (!models.avatar) return
+  //   await attachmentManager.computeUrl(models.avatar)
+  // }
 
   static accessTokens = DbAccessTokensProvider.forModel(User, {
     expiresIn: '30 days',

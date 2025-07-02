@@ -3,7 +3,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class VendorsController {
   public async index({ inertia }: HttpContext) {
-    // const vendors = await User.query().where('role', 'vendor').orderBy('created_at', 'desc')
     return inertia.render('Admin/vendors/index')
   }
 
