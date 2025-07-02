@@ -1,5 +1,4 @@
-import React from 'react'
-import { styled } from '@mui/system'
+// import { styled } from '@mui/system'
 import { Button, Container, Typography, Box, Grid } from '@mui/material'
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
 import HandymanIcon from '@mui/icons-material/Handyman'
@@ -10,13 +9,13 @@ import { useTheme, useMediaQuery } from '@mui/material'
 
 
 
-const PurpleButton = styled(Button)({
-  backgroundColor: '#6a1b9a',
-  color: '#fff',
-  '&:hover': {
-    backgroundColor: '#4a148c'
-  }
-})
+// const PurpleButton = styled(Button)({
+//   backgroundColor: '#6a1b9a',
+//   color: '#fff',
+//   '&:hover': {
+//     backgroundColor: '#4a148c'
+//   }
+// })
 
 const Home = () => {
   const theme = useTheme()
@@ -27,7 +26,7 @@ const Home = () => {
       <Box sx={{ bgcolor: '#f5f6fa', py: isMobile ? 6 : 12 }}>
         <Container maxWidth="lg">
           <Grid container spacing={isMobile ? 2 : 4} alignItems="center">
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <motion.div
                 initial={{ x: isMobile ? 0 : -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -50,7 +49,7 @@ const Home = () => {
                 </Button>
               </motion.div>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -75,17 +74,17 @@ const Home = () => {
             How ScrapBro Works
           </Typography>
           <Grid container spacing={4} justifyContent="center" sx={{ mt: 4 }}>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <DirectionsCarIcon color="primary" sx={{ fontSize: 50 }} />
               <Typography variant="h6" fontWeight="bold">Browse Spare Parts</Typography>
               <Typography color="text.secondary">Use smart filters and location-based search to find the right part quickly.</Typography>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <HandymanIcon color="primary" sx={{ fontSize: 50 }} />
               <Typography variant="h6" fontWeight="bold">Connect with Scrappers</Typography>
               <Typography color="text.secondary">Message or call verified scrappers directly. No middlemen, no extra charges.</Typography>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <BuildIcon color="primary" sx={{ fontSize: 50 }} />
               <Typography variant="h6" fontWeight="bold">Order & Save</Typography>
               <Typography color="text.secondary">Negotiate, purchase, and track your orders. Save up to 70% vs showroom prices.</Typography>
@@ -101,19 +100,19 @@ const Home = () => {
             Why Choose ScrapBro?
           </Typography>
           <Grid container spacing={4} sx={{ mt: 4 }}>
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="h6" fontWeight="bold">✅ Verified Sellers</Typography>
               <Typography color="text.secondary">We vet each scrapper to ensure quality and trustworthiness.</Typography>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="h6" fontWeight="bold">💰 Huge Savings</Typography>
               <Typography color="text.secondary">Used parts at up to 70% less than OEM replacements.</Typography>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="h6" fontWeight="bold">📦 Updated Stock</Typography>
               <Typography color="text.secondary">Real-time or periodic inventory so you always know what's available.</Typography>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="h6" fontWeight="bold">📞 Direct Contact</Typography>
               <Typography color="text.secondary">Reach out instantly via phone or WhatsApp.</Typography>
             </Grid>

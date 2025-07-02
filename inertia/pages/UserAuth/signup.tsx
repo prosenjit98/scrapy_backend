@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Inertia } from '@inertiajs/inertia'
+import React from 'react'
 import { Box, TextField, Button, Typography, Alert, Container, Paper } from '@mui/material'
+import { useForm } from '@inertiajs/react'
 
 interface Flash {
   success?: string
@@ -9,35 +9,32 @@ interface Flash {
   }
 }
 
+// interface FormState {
+//   full_name: string
+//   email: string
+//   password: string
+// }
+
 const SignUp = ({ flash }: { flash: Flash }) => {
-  const [form, setForm] = useState({
+  const { data: form, setData, post, processing } = useForm({
     full_name: '',
     email: '',
     password: '',
   })
 
-  interface FormState {
-    full_name: string
-    email: string
-    password: string
-  }
 
-  interface ChangeEvent {
-    target: {
-      name: keyof FormState
-      value: string
-    }
-  }
 
-  const handleChange = (e: ChangeEvent) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target
-    setForm({ ...form, [name]: value })
+    setData({ ...form, [name]: value })
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    Inertia.post('/sign-up', form)
+    post('/sign-up')
   }
+
+  console.log("Flash:", flash)
 
   return (
     <Container maxWidth="sm" sx={{ mt: 10 }}>
@@ -85,6 +82,7 @@ const SignUp = ({ flash }: { flash: Flash }) => {
               variant="contained"
               color="primary"
               fullWidth
+              disabled={processing}
               sx={{ mt: 2 }}
             >
               Sign Up
