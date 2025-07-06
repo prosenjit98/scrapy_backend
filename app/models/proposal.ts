@@ -1,8 +1,11 @@
 import { DateTime } from 'luxon'
 import User from './user.js'
 import Part from './part.js'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import Comment from './comment.js'
+import type { BelongsTo,HasMany } from '@adonisjs/lucid/types/relations'
+import type {  } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo,hasMany, column } from '@adonisjs/lucid/orm'
+
 
 export default class Proposal extends BaseModel {
   @column({ isPrimary: true })
@@ -43,4 +46,7 @@ export default class Proposal extends BaseModel {
 
   @belongsTo(() => User, { foreignKey: 'proposerId' })
   declare proposer: BelongsTo<typeof User>
+
+  @hasMany(() => Comment, { foreignKey: 'proposalId' })
+  declare comments: HasMany<typeof Comment>
 }
