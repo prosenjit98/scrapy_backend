@@ -5,8 +5,9 @@ import SearchIcon from '@mui/icons-material/Search'
 import MenuIcon from '@mui/icons-material/Menu'
 import UserDropdown from '../user_dropdown'
 import UserFormModal from '../UserAuth/user_form_modal'
-
-
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import InquiryFormModal  from '~/pages/Inquiries/new'
+import { useState } from 'react'
 
 function Header() {
   return (
@@ -47,6 +48,7 @@ interface NavBarProps {
 }
 
 const NavBar = ({ user }: NavBarProps) => {
+  const [modalOpen, setModalOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width:768px)');
   const isLoggedIn = !!user;
@@ -102,6 +104,28 @@ const NavBar = ({ user }: NavBarProps) => {
             />
           </SearchBar>
         )}
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Button
+            variant="outlined"
+            startIcon={<HelpOutlineIcon />}
+            sx={{
+              textTransform: 'none',
+              color: theme.palette.primary.main,
+              borderColor: theme.palette.primary.main,
+              fontWeight: 500,
+              borderRadius: 30,
+              '&:hover': {
+                backgroundColor: theme.palette.background.default,
+                borderColor: theme.palette.primary.dark,
+              },
+            }}
+            aria-label="Open Inquire Modal"
+            href='/inquiries/new'
+          >
+            Inquire
+          </Button>
+        </Box>
 
         {/* Login/Signup or Profile/Dashboard */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

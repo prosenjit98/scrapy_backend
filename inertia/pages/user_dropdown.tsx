@@ -20,10 +20,13 @@ import {
   Logout as LogoutIcon,
 } from '@mui/icons-material'
 import { useForm } from '@inertiajs/react'
+import InquiryFormModal  from '~/pages/Inquiries/new'
 
 
 const UserDropdown = () => {
   const [anchorEl, setAnchorEl] = useState(null)
+  const [modalOpen, setModalOpen] = useState(false)
+
   const open = Boolean(anchorEl)
 
   const handleClick = (event) => {
@@ -87,7 +90,7 @@ const UserDropdown = () => {
           </ListItemIcon>
           Profile
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => setModalOpen(true)}>
           <ListItemIcon>
             <QuestionAnswerIcon fontSize="small" />
           </ListItemIcon>

@@ -6,6 +6,9 @@ import BuildIcon from '@mui/icons-material/Build'
 import { motion } from 'framer-motion'
 import UserRoot from '~/shared/user_root'
 import { useTheme, useMediaQuery } from '@mui/material'
+import InquiryFormModal  from '~/pages/Inquiries/new'
+import { useState } from 'react'
+
 
 
 
@@ -18,6 +21,7 @@ import { useTheme, useMediaQuery } from '@mui/material'
 // })
 
 const Home = () => {
+  const [modalOpen, setModalOpen] = useState(false)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   return (
@@ -44,7 +48,7 @@ const Home = () => {
                 <Button variant="contained" color="primary" size="large" sx={{ mr: 2 }}>
                   Explore Marketplace
                 </Button>
-                <Button variant="outlined" color="primary" size="large">
+                <Button variant="outlined" color="primary" size="large" onClick={() => setModalOpen(true)}>
                   Become a Seller
                 </Button>
               </motion.div>
@@ -134,7 +138,13 @@ const Home = () => {
           </Typography>
         </Container>
       </Box>
+      <InquiryFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        initialData={undefined} // Pass initial data if needed
+      />
     </Box>
+
   )
 }
 

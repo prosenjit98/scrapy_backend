@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import InquiriesController from '#controllers/inquiries_controller'
 const AuthController = () => import('#controllers/admin/auth_controller')
 const AdminDashboardController = () => import('#controllers/admin/dashboard_controller')
 const AdminUsersController = () => import('#controllers/admin/users_controller')
@@ -78,6 +79,7 @@ router.get('/forgot-password', 'AuthController.showForgotPassword').as('forgot-p
 router.post('/forgot-password', 'AuthController.forgotPassword')
 router.get('/reset-password/:token', 'AuthController.showResetPassword').as('reset-password')
 router.post('/reset-password', 'AuthController.resetPassword')
+router.get('/inquiries/new', [InquiriesController, 'new']).as('inquiries.new')
 router
   .group(() => {
     router.post('/login', [ApiSessionController, 'login']).as('api.login')
