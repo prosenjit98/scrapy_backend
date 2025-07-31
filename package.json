@@ -71,7 +71,7 @@
     "@emotion/styled": "^11.14.0",
     "@google-cloud/storage": "^7.16.0",
     "@inertiajs/react": "^2.0.11",
-    "@jrmc/adonis-attachment": "^4.0.1",
+    "@jrmc/adonis-attachment": "^4.0.3",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@mui/x-data-grid": "^8.4.0",
