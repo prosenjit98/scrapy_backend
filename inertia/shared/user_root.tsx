@@ -7,11 +7,20 @@ import {
 import Flash from '~/shared/flash'
 import TopBar from '~/pages/public/top_bar'
 
+interface User {
+  name?: string
+  avatar?: string
+}
 
-export default function UserRoot(props:any) {
+interface UserRootProps {
+  user?: User | null
+  children: React.ReactNode
+}
+
+export default function UserRoot(props: UserRootProps) {
   return (
     <>
-      <TopBar user={props.user} />
+      <TopBar user={props.user || null} />
       <Flash />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -26,7 +35,6 @@ export default function UserRoot(props:any) {
             p: 3,
           }}
         >
-          <Toolbar />
           {props.children}
         </Box>
       </Box>

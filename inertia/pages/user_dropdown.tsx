@@ -20,7 +20,6 @@ import {
   Logout as LogoutIcon,
 } from '@mui/icons-material'
 import { useForm } from '@inertiajs/react'
-import InquiryFormModal  from '~/pages/Inquiries/new'
 
 
 const UserDropdown = () => {

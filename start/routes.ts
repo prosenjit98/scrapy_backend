@@ -15,6 +15,7 @@ const AdminDashboardController = () => import('#controllers/admin/dashboard_cont
 const AdminUsersController = () => import('#controllers/admin/users_controller')
 const AdminVendorsController = () => import('#controllers/admin/vendors_controller')
 const UserAuthController = () => import('#controllers/user_auth_controller')
+const HomeController = () => import('#controllers/home_controller')
 const AdminVehiclesController = () => import('#controllers/admin/vehicles_controller')
 const AdminPartsController = () => import('#controllers/admin/parts_controller')
 const AdminVehiclesMakeController = () => import('#controllers/admin/vehicle_makes_controller')
@@ -69,17 +70,31 @@ router
   })
   .prefix('/admin')
 
-router.on('/').renderInertia('public/home')
+router.get('/', [HomeController, 'index']).as('home')
 router.get('/login', [UserAuthController, 'showLogin']).as('login')
 router.post('/login', [UserAuthController, 'login'])
 router.post('/logout', [UserAuthController, 'logout'])
 router.get('/signup', [UserAuthController, 'showSignup']).as('signup')
 router.post('/sign-up', [UserAuthController, 'signup'])
-router.get('/forgot-password', 'AuthController.showForgotPassword').as('forgot-password')
-router.post('/forgot-password', 'AuthController.forgotPassword')
-router.get('/reset-password/:token', 'AuthController.showResetPassword').as('reset-password')
-router.post('/reset-password', 'AuthController.resetPassword')
-router.get('/inquiries/new', [InquiriesController, 'new']).as('inquiries.new')
+
+// Public inquiry routes (can be viewed without authentication)
+router.get('/inquiries', [InquiriesController, 'index']).as('inquiries.index')
+
+// Protected inquiry routes (require authentication)
+router
+  .group(() => {
+    router.get('/inquiries/new', [InquiriesController, 'new']).as('inquiries.new')
+    router.post('/inquiries', [InquiriesController, 'create']).as('inquiries.create')
+    router.get('/inquiries/:id/edit', [InquiriesController, 'edit']).as('inquiries.edit')
+    router.put('/inquiries/:id', [InquiriesController, 'update']).as('inquiries.update')
+  })
+  .use(middleware.auth({
+    guards: ['web']
+  }))
+
+// Public inquiry routes with parameters (must come after specific routes)
+router.get('/inquiries/:id', [InquiriesController, 'show']).as('inquiries.show')
+
 router
   .group(() => {
     router.post('/login', [ApiSessionController, 'login']).as('api.login')

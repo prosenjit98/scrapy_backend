@@ -3,11 +3,8 @@ import { styled, useTheme } from '@mui/system'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import SearchIcon from '@mui/icons-material/Search'
 import MenuIcon from '@mui/icons-material/Menu'
-import UserDropdown from '../user_dropdown'
-import UserFormModal from '../UserAuth/user_form_modal'
+import UserDropdown from '~/pages/user_dropdown'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import InquiryFormModal  from '~/pages/Inquiries/new'
-import { useState } from 'react'
 
 function Header() {
   return (
@@ -48,7 +45,6 @@ interface NavBarProps {
 }
 
 const NavBar = ({ user }: NavBarProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width:768px)');
   const isLoggedIn = !!user;

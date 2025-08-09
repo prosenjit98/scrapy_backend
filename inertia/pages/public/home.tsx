@@ -6,7 +6,6 @@ import BuildIcon from '@mui/icons-material/Build'
 import { motion } from 'framer-motion'
 import UserRoot from '~/shared/user_root'
 import { useTheme, useMediaQuery } from '@mui/material'
-import InquiryFormModal  from '~/pages/Inquiries/new'
 import { useState } from 'react'
 
 
@@ -138,11 +137,6 @@ const Home = () => {
           </Typography>
         </Container>
       </Box>
-      <InquiryFormModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        initialData={undefined} // Pass initial data if needed
-      />
     </Box>
 
   )
@@ -161,8 +155,10 @@ interface HomePageProps {
 const HomePage = ({ user }: HomePageProps) => {
   return (
     <>
-      <UserRoot user={user} />
-      <Home />
+      <UserRoot user={user} >
+        <Home />
+      </UserRoot>
+
     </>
   )
 }

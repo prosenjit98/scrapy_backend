@@ -1,4 +1,5 @@
-[[-[---import Inquiry from '#models/inquiry'
+import Inquiry from '#models/inquiry'
+import Attachment from '#models/attachment'
 import type { HttpContext } from '@adonisjs/core/http'
 import VehicleMake from '#models/vehicle_make'
 import VehicleModel from '#models/vehicle_model'
@@ -22,22 +23,72 @@ export default class InquiriesController {
     return inquiriesPage.serialize()
   }
 
-  public async new({ inertia }: HttpContext) {
+  public async new({ inertia, auth }: HttpContext) {
     const vehicleMakes = await VehicleMake.all()
-    const vehicleMakesData = vehicleMakes-.map(make => ({ id: make.id, name: make.name }))
+    const vehicleMakesData = vehicleMakes.map(make => ({ id: make.id, name: make.name }))
     const vehicleModels = await VehicleModel.all()
     const vehicleModelsData = vehicleModels.map(model => ({ id: model.id, name: model.name }))
+    
+    // Get current user for the form
+    const currentUser = auth.use('web').user!
+    const user = {
+      name: currentUser.fullName,
+      avatar: undefined
+    }
+    
     console.log('Vehicle Makes:', vehicleMakesData)
-    console.log('Vehicle Models:', vehicleModelsData)
-    // Pass vehicleMakes and vehicleModels to the Inertia page
-    return inertia.render('inquiries/new', { vehicleMakes: vehicleMakesData, vehicleModels: vehicleModelsData })
+    return inertia.render('inquiries/new', { 
+      vehicleMakes: vehicleMakesData, 
+      vehicleModels: vehicleModelsData,
+      user: user
+    })
   }
   
 
-  public async create({ request, inertia }: HttpContext) {
-    const inquiryData = request.only([ 'user_id', 'vehicleMake', 'vehicleModel', 'partDescription', 'year' ])
-    const inquiry = await Inquiry.create(inquiryData)
-    return inertia.redirect('/inquiries')
+  public async create({ request, response, session, auth }: HttpContext) {
+    try {
+      // Get the current authenticated user (middleware ensures this exists)
+      const currentUser = auth.use('web').user!
+      
+      // Get form data (excluding userId since we'll set it automatically)
+      const formData = request.only(['vehicleMake', 'vehicleModel', 'partDescription', 'year'])
+      
+      // Convert string values to numbers for foreign keys
+      const inquiryData = {
+        vehicleMake: parseInt(formData.vehicleMake),
+        vehicleModel: parseInt(formData.vehicleModel),
+        partDescription: formData.partDescription,
+        year: parseInt(formData.year)
+      }
+      
+      // Log the incoming data for debugging
+      console.log('Incoming inquiry data:', inquiryData)
+      console.log('Current user:', currentUser.id, currentUser.fullName)
+      
+      // Create inquiry with current user's ID and default status
+      const inquiry = await Inquiry.create({
+        ...inquiryData,
+        userId: currentUser.id, // Automatically set to current user
+        status: 'pending'
+      })
+
+      // Handle file attachments
+      const attachments = request.files('attachments')
+      if (attachments && attachments.length > 0) {
+        for (const attachment of attachments) {
+          if (attachment.isValid) {
+            await Attachment.attach(inquiry, attachment)
+          }
+        }
+      }
+      
+      session.flash('success', 'Inquiry created successfully')
+      return response.redirect('/inquiries')
+    } catch (error) {
+      console.error('Error creating inquiry:', error)
+      session.flash('error', `Failed to create inquiry: ${error.message}`)
+      return response.redirect().back()
+    }
   }
   public async edit({ params, inertia }: HttpContext) {
     const inquiry = await Inquiry.find(params.id)
@@ -48,6 +99,8 @@ export default class InquiriesController {
     await inquiry.load('user', (userQuery) => {
       userQuery.select('fullName', 'email')
     })
+    
+    await inquiry.load('attachments')
 
     return inertia.render('inquiries/edit', { inquiry: inquiry.serialize() })
   }
@@ -60,6 +113,8 @@ export default class InquiriesController {
     await inquiry.load('user', (userQuery) => {
       userQuery.select('fullName', 'email')
     })
+    
+    await inquiry.load('attachments')
 
     return inertia.render('inquiries/show', { inquiry: inquiry.serialize() })
   }
