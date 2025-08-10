@@ -9,26 +9,27 @@ import {
   Menu,
   MenuItem,
   Typography,
-  Paper,
 } from '@mui/material'
 import {
-  Dashboard as DashboardIcon,
   Person as PersonIcon,
   QuestionAnswer as QuestionAnswerIcon,
-  ShoppingCart as ShoppingCartIcon,
-  CardMembership as CardMembershipIcon,
   Logout as LogoutIcon,
 } from '@mui/icons-material'
 import { useForm } from '@inertiajs/react'
 
+interface UserDropdownProps {
+  user: {
+    name?: string;
+    avatar?: string;
+  } | null;
+}
 
-const UserDropdown = () => {
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [modalOpen, setModalOpen] = useState(false)
+const UserDropdown = ({ user }: UserDropdownProps) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const open = Boolean(anchorEl)
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
@@ -41,13 +42,26 @@ const UserDropdown = () => {
     post('/logout') // Or use Inertia form post
    }
 
+  // Get user initials for avatar
+  const getUserInitials = (name?: string) => {
+    if (!name) return 'U'
+    const nameParts = name.split(' ')
+    if (nameParts.length >= 2) {
+      return `${nameParts[0][0]}${nameParts[1][0]}`.toUpperCase()
+    }
+    return name[0].toUpperCase()
+  }
+
+  const displayName = user?.name || 'User'
+  const initials = getUserInitials(user?.name)
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
       <Typography variant="body1" sx={{ fontWeight: 500 }}>
-        Hi! Avijit kuila
+        Hi! {displayName}
       </Typography>
       <IconButton onClick={handleClick} size="small">
-        <Avatar sx={{ width: 32, height: 32 }}>AV</Avatar>
+        <Avatar sx={{ width: 32, height: 32 }}>{initials}</Avatar>
       </IconButton>
 
       <Menu
@@ -73,40 +87,26 @@ const UserDropdown = () => {
           horizontal: 'right',
         }}
       >
-        <Typography variant="subtitle1" sx={{ px: 2, pt: 1 }}>
-          Welcome!
-        </Typography>
 
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <DashboardIcon fontSize="small" />
-          </ListItemIcon>
-          Dashboard
-        </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <PersonIcon fontSize="small" />
           </ListItemIcon>
           Profile
         </MenuItem>
-        <MenuItem onClick={() => setModalOpen(true)}>
+        <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <QuestionAnswerIcon fontSize="small" />
           </ListItemIcon>
           Inquiries
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        {/* <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <ShoppingCartIcon fontSize="small" />
           </ListItemIcon>
           Buy Leads
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <CardMembershipIcon fontSize="small" />
-          </ListItemIcon>
-          My Membership
-        </MenuItem>
+        </MenuItem> */}
+        
 
         <Divider />
 

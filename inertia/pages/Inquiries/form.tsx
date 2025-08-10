@@ -130,7 +130,7 @@ export default function InquiryForm({
     >
       <Box sx={{ backgroundColor: "#f8f9fa", p: 3, borderRadius: 2, mb: 3 }}>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
-          One Request, Multiple Quotes
+          One Request, Multiple Proposals
         </Typography>
         <Typography variant="subtitle2" gutterBottom>
           How it works?

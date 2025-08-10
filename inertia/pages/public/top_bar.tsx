@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Button, IconButton, Box, InputBase, MenuItem, Select, useMediaQuery, Avatar } from '@mui/material'
+import { AppBar, Toolbar, Typography, Button, IconButton, Box, InputBase, MenuItem, Select, useMediaQuery } from '@mui/material'
 import { styled, useTheme } from '@mui/system'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import SearchIcon from '@mui/icons-material/Search'
@@ -6,13 +6,6 @@ import MenuIcon from '@mui/icons-material/Menu'
 import UserDropdown from '~/pages/user_dropdown'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
-function Header() {
-  return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
-      <UserDropdown />
-    </Box>
-  )
-}
 
 const SearchBar = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -36,6 +29,7 @@ const ThemedOutlinedButton = styled(Button)(({ theme }) => ({
     borderColor: theme.palette.primary.dark
   }
 }))
+
 
 interface NavBarProps {
   user: {
@@ -128,7 +122,7 @@ const NavBar = ({ user }: NavBarProps) => {
           {isLoggedIn ? (
             <>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
-                <UserDropdown />
+                <UserDropdown user={user} />
               </Box>
             </>
           ) : (
