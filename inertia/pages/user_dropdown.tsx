@@ -52,14 +52,11 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
     return name[0].toUpperCase()
   }
 
-  const displayName = user?.name || 'User'
   const initials = getUserInitials(user?.name)
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-      <Typography variant="body1" sx={{ fontWeight: 500 }}>
-        Hi! {displayName}
-      </Typography>
+
       <IconButton onClick={handleClick} size="small">
         <Avatar sx={{ width: 32, height: 32 }}>{initials}</Avatar>
       </IconButton>

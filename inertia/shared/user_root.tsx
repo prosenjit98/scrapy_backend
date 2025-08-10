@@ -8,8 +8,13 @@ import Flash from '~/shared/flash'
 import TopBar from '~/pages/public/top_bar'
 
 interface User {
-  name?: string
-  avatar?: string
+  id?: number
+  fullName?: string
+  email?: string
+  address?: string
+  phoneNumber?: string
+  role?: 'buyer' | 'vendor'
+  // Add other user properties as needed
 }
 
 interface UserRootProps {

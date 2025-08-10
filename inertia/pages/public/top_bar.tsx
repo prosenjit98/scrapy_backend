@@ -1,8 +1,7 @@
-import { AppBar, Toolbar, Typography, Button, IconButton, Box, InputBase, MenuItem, Select, useMediaQuery } from '@mui/material'
+import { AppBar, Toolbar, Typography, Button, Box, InputBase, MenuItem, Select, useMediaQuery } from '@mui/material'
 import { styled, useTheme } from '@mui/system'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import SearchIcon from '@mui/icons-material/Search'
-import MenuIcon from '@mui/icons-material/Menu'
 import UserDropdown from '~/pages/user_dropdown'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
@@ -33,8 +32,14 @@ const ThemedOutlinedButton = styled(Button)(({ theme }) => ({
 
 interface NavBarProps {
   user: {
+    id?: number;
     name?: string;
-    avatar?: string;
+    email?: string;
+    address?: string;
+    phoneNumber?: string;
+    role?: 'buyer' | 'vendor';
+    // Add other user properties as needed
+    // avatar?: string; // Uncomment if avatar is implemented
   } | null;
 }
 
@@ -58,7 +63,20 @@ const NavBar = ({ user }: NavBarProps) => {
       <Toolbar sx={{ justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
         {/* Logo and City Dropdown */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="h6" fontWeight="bold" sx={{ color: theme.palette.primary.main }}>
+          <Typography 
+            variant="h6" 
+            fontWeight="bold" 
+            component="a"
+            href="/"
+            sx={{ 
+              color: theme.palette.primary.main,
+              textDecoration: 'none',
+              cursor: 'pointer',
+              '&:hover': {
+                opacity: 0.8
+              }
+            }}
+          >
             ScrapBro
           </Typography>
           <LocationOnIcon sx={{ color: theme.palette.primary.main }} />
@@ -116,11 +134,27 @@ const NavBar = ({ user }: NavBarProps) => {
             Inquire
           </Button>
         </Box>
+        
 
         {/* Login/Signup or Profile/Dashboard */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           {isLoggedIn ? (
             <>
+              <ThemedOutlinedButton
+                href={user?.id ? `/switch_to_selling/${user.id}` : '/switch_to_selling'}
+                variant="contained"
+                size="small"
+                sx={{
+                  backgroundColor: theme.palette.secondary.main,
+                  color: theme.palette.getContrastText(theme.palette.secondary.main),
+                  ml: 1,
+                  '&:hover': {
+                    backgroundColor: theme.palette.secondary.dark,
+                  },
+                }}
+              >
+                Switch to Selling
+              </ThemedOutlinedButton>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
                 <UserDropdown user={user} />
               </Box>
@@ -142,9 +176,6 @@ const NavBar = ({ user }: NavBarProps) => {
               </ThemedOutlinedButton>
             </>
           )}
-          <IconButton sx={{ color: theme.palette.primary.main }}>
-            <MenuIcon />
-          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>

@@ -11,7 +11,12 @@ export default class HomeController {
       if (auth.use('web').isAuthenticated) {
         const authenticatedUser = auth.use('web').user!
         user = {
+          id: authenticatedUser.id,
           name: authenticatedUser.fullName,
+          email: authenticatedUser.email,
+          address: authenticatedUser.address,
+          phoneNumber: authenticatedUser.phoneNumber,
+          role: authenticatedUser.role,
           avatar: undefined, // You can add avatar logic later if needed
         }
       }

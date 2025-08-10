@@ -32,7 +32,13 @@ export default class InquiriesController {
     // Get current user for the form
     const currentUser = auth.use('web').user!
     const user = {
+      id: currentUser.id,
       name: currentUser.fullName,
+      email: currentUser.email,
+      address: currentUser.address,
+      phoneNumber: currentUser.phoneNumber,
+      role: currentUser.role,
+      // Assuming avatar is not yet implemented, set to undefined
       avatar: undefined
     }
     

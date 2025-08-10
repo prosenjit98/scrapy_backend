@@ -10,6 +10,7 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import InquiriesController from '#controllers/inquiries_controller'
+import UsersController from '#controllers/users_controller'
 const AuthController = () => import('#controllers/admin/auth_controller')
 const AdminDashboardController = () => import('#controllers/admin/dashboard_controller')
 const AdminUsersController = () => import('#controllers/admin/users_controller')
@@ -77,8 +78,6 @@ router.post('/logout', [UserAuthController, 'logout'])
 router.get('/signup', [UserAuthController, 'showSignup']).as('signup')
 router.post('/sign-up', [UserAuthController, 'signup'])
 
-// Public inquiry routes (can be viewed without authentication)
-router.get('/inquiries', [InquiriesController, 'index']).as('inquiries.index')
 
 // Protected inquiry routes (require authentication)
 router
@@ -87,6 +86,8 @@ router
     router.post('/inquiries', [InquiriesController, 'create']).as('inquiries.create')
     router.get('/inquiries/:id/edit', [InquiriesController, 'edit']).as('inquiries.edit')
     router.put('/inquiries/:id', [InquiriesController, 'update']).as('inquiries.update')
+
+    router.get('/switch_to_selling/:id', [UsersController, 'switch_to_selling']).as('inquiries.switch_to_selling')
   })
   .use(middleware.auth({
     guards: ['web']

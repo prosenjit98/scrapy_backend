@@ -45,7 +45,7 @@ export default class UserAuthController {
         password,
       })
       await auth.use('web').login(user)
-      session.flash('success', 'Account created successfully')
+      session.flash('success', 'sign up successfully')
       return response.redirect('/')
     } catch (error) {
       session.flash('errors', {

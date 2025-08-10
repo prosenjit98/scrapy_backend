@@ -13,7 +13,6 @@ import {
   MenuItem,
 } from '@mui/material'
 import { useForm } from '@inertiajs/react'
-import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 
 interface Flash {
   success?: string
@@ -28,7 +27,6 @@ const SignUp = ({ flash }: { flash: Flash }) => {
     email: '',
     phone_code: '+91',
     phone_number: '',
-    pin_code: '',
     password: '',
     sign_up_as_seller: false
   })
@@ -63,9 +61,9 @@ const SignUp = ({ flash }: { flash: Flash }) => {
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
               <img
-                src="/images/signup-illustration.png"
+                src="/public/images/sign_up.avif"
                 alt="Sign up illustration"
-                style={{ maxWidth: '80%', height: 'auto' }}
+                style={{ maxWidth: '80%', height: 'auto', borderRadius: '8px' }}
               />
             </Box>
           </Box>
@@ -107,7 +105,7 @@ const SignUp = ({ flash }: { flash: Flash }) => {
                 <Select
                   value={form.phone_code}
                   onChange={(e) => setData({ ...form, phone_code: e.target.value })}
-                  sx={{ minWidth: 90, mt: 2 }}
+                  sx={{ minWidth: 100, mt: 2 }}
                 >
                   <MenuItem value="+91">🇮🇳 +91</MenuItem>
                   <MenuItem value="+1">🇺🇸 +1</MenuItem>
@@ -123,14 +121,6 @@ const SignUp = ({ flash }: { flash: Flash }) => {
                   required
                 />
               </Box>
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Pin Code"
-                name="pin_code"
-                value={form.pin_code}
-                onChange={handleChange}
-              />
 
               <FormControlLabel
                 control={
