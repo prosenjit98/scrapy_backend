@@ -1,0 +1,33 @@
+import { Head } from '@inertiajs/react'
+import { Container, Paper, Typography } from '@mui/material'
+import InquiryForm from '~/pages/inquiries/form'
+import UserRoot from '~/shared/user_root'
+interface Props {
+  vehicleMakes: { id: number; name: string }[]
+  vehicleModels: { id: number; name: string }[]
+  user?: { name?: string; avatar?: string } | null
+}
+
+export default function InquiryNew({ vehicleMakes, vehicleModels, user }: Props) {
+  return (
+    <>
+      <UserRoot user={user}>
+        <Head title="New Inquiry" />
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+          <Paper sx={{ p: 4 }}>
+            <Typography variant="h4" component="h1" sx={{ mb: 3 }}>
+              Create New Inquiry
+            </Typography>
+            
+            <InquiryForm 
+              vehicleMakes={vehicleMakes}
+              vehicleModels={vehicleModels}
+              submitButtonText="Create Inquiry"
+              showCancelButton={true}
+            />
+          </Paper>
+        </Container>
+      </UserRoot>
+    </>
+  )
+}

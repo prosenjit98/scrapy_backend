@@ -6,7 +6,7 @@ export default class UserAuthController {
     return inertia.render('UserAuth/login')
   }
 
-  public async login({ request, auth, response, session, inertia }: HttpContext) {
+  public async login({ request, auth, response, session }: HttpContext) {
     const email = request.input('email')
     const password = request.input('password')
 
@@ -15,13 +15,7 @@ export default class UserAuthController {
       await auth.use('web').login(user)
       session.flash('success', 'Logged in successfully')
       console.log('User logged in:', session.flashMessages)
-      return inertia.render('public/home', {
-        user: {
-          id: user.id,
-          name: user.fullName,
-          email: user.email,
-        },
-      })
+      return response.redirect('/') 
     } catch (error) {
       session.flash('errors', {
         email: 'Invalid credentials',
@@ -30,18 +24,16 @@ export default class UserAuthController {
     }
   }
 
-  public async logout({ auth, response, session, inertia }: HttpContext) {
+  public async logout({ auth, session, response }: HttpContext) {
     await auth.use('web').logout()
-    session.flash('success', 'Logged out in successfully')
-    return inertia.render('public/home', {
-      user: null,
-    })
+    session.flash('success', 'Logged out successfully')
+    return response.redirect('/')
   }
 
   public async showSignup({ inertia }: HttpContext) {
     return inertia.render('UserAuth/signup')
   }
-  public async signup({ request, auth, response, session, inertia }: HttpContext) {
+  public async signup({ request, auth, response, session }: HttpContext) {
     const fullName = request.input('full_name')
     const email = request.input('email')
     const password = request.input('password')
@@ -53,14 +45,8 @@ export default class UserAuthController {
         password,
       })
       await auth.use('web').login(user)
-      session.flash('success', 'Account created successfully')
-      return inertia.render('public/home', {
-        user: {
-          id: user.id,
-          name: user.fullName,
-          email: user.email,
-        },
-      })
+      session.flash('success', 'sign up successfully')
+      return response.redirect('/')
     } catch (error) {
       session.flash('errors', {
         email: 'Email already exists',
@@ -75,7 +61,8 @@ export default class UserAuthController {
     const email = request.input('email')
 
     try {
-      // Logic to handle forgot password, e.g., sending reset link
+      // TODO: Logic to handle forgot password, e.g., sending reset link
+      console.log('Reset password for email:', email)
       session.flash('success', 'Password reset link sent to your email')
       return response.redirect().back()
     } catch (error) {
@@ -95,7 +82,8 @@ export default class UserAuthController {
     const newPassword = request.input('new_password')
 
     try {
-      // Logic to reset password using the token
+      // TODO: Logic to reset password using the token
+      console.log('Reset password with token:', token, 'new password:', newPassword)
       session.flash('success', 'Password reset successfully')
       return response.redirect('/login')
     } catch (error) {

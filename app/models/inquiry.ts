@@ -1,7 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
 import User from './user.js'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import Attachment from './attachment.js'
+import VehicleMake from './vehicle_make.js'
+import VehicleModel from './vehicle_model.js'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 
 export default class Inquiry extends BaseModel {
   @column({ isPrimary: true })
@@ -11,10 +14,10 @@ export default class Inquiry extends BaseModel {
   declare userId: number
 
   @column()
-  declare vehicleMake: string
+  declare vehicleMake: number
 
   @column()
-  declare vehicleModel: string
+  declare vehicleModel: number
 
   @column()
   declare year: number
@@ -33,4 +36,17 @@ export default class Inquiry extends BaseModel {
 
   @belongsTo(() => User, { foreignKey: 'userId' })
   declare user: BelongsTo<typeof User>
+
+  @belongsTo(() => VehicleMake, { foreignKey: 'vehicleMake' })
+  declare make: BelongsTo<typeof VehicleMake>
+
+  @belongsTo(() => VehicleModel, { foreignKey: 'vehicleModel' })
+  declare model: BelongsTo<typeof VehicleModel>
+
+  @hasMany(() => Attachment, {
+    foreignKey: 'attachableId',
+    localKey: 'id',
+    onQuery: (query) => query.where('attachableType', 'Inquiry')
+  })
+  declare attachments: HasMany<typeof Attachment>
 }
