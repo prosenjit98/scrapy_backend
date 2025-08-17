@@ -91,7 +91,11 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
           </ListItemIcon>
           Profile
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem 
+          onClick={handleClose}
+          component="a"
+          href="/my_inquiries"
+        >
           <ListItemIcon>
             <QuestionAnswerIcon fontSize="small" />
           </ListItemIcon>

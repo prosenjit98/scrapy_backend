@@ -37,7 +37,7 @@ export default function UserRoot(props: UserRootProps) {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
+            p: 9,
           }}
         >
           {props.children}

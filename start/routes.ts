@@ -88,6 +88,7 @@ router
     router.put('/inquiries/:id', [InquiriesController, 'update']).as('inquiries.update')
 
     router.get('/switch_to_selling/:id', [UsersController, 'switch_to_selling']).as('inquiries.switch_to_selling')
+    router.get('/my_inquiries', [InquiriesController, 'myInquiries']).as('inquiries.myInquiries')
   })
   .use(middleware.auth({
     guards: ['web']
