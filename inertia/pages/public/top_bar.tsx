@@ -52,12 +52,13 @@ const NavBar = ({ user }: NavBarProps) => {
 
   return (
     <AppBar
-      position="static"
+      position="fixed"
       elevation={1}
       sx={{
         backgroundColor: theme.palette.background.paper,
         color: theme.palette.text.primary,
         px: 2,
+        zIndex: 1300, // Ensure it appears above other elements
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
@@ -141,7 +142,7 @@ const NavBar = ({ user }: NavBarProps) => {
           {isLoggedIn ? (
             <>
               <ThemedOutlinedButton
-                href={user?.id ? `/switch_to_selling/${user.id}` : '/switch_to_selling'}
+                href={user?.role === 'vendor' ? `/switch_to_buying/${user.id}` : `/switch_to_selling/${user.id}`}
                 variant="contained"
                 size="small"
                 sx={{
@@ -153,7 +154,7 @@ const NavBar = ({ user }: NavBarProps) => {
                   },
                 }}
               >
-                Switch to Selling
+                {user?.role === 'vendor' ? 'Switch to Buying' : 'Switch to Selling'}
               </ThemedOutlinedButton>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
                 <UserDropdown user={user} />

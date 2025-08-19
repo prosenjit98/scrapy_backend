@@ -5,13 +5,13 @@ import UserRoot from '~/shared/user_root'
 interface Props {
   vehicleMakes: { id: number; name: string }[]
   vehicleModels: { id: number; name: string }[]
-  user?: { name?: string; avatar?: string } | null
+  user: { id?: number; name?: string; email?: string; address?: string; phoneNumber?: string; role?: 'buyer' | 'vendor' | null; avatar?: string | null };
 }
 
 export default function InquiryNew({ vehicleMakes, vehicleModels, user }: Props) {
   return (
     <>
-      <UserRoot user={user}>
+      <UserRoot user={user ? { ...user, role: user.role === null ? undefined : user.role } : user}>
         <Head title="New Inquiry" />
         <Container maxWidth="lg" sx={{ py: 4 }}>
           <Paper sx={{ p: 4 }}>

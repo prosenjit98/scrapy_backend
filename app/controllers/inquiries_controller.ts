@@ -23,6 +23,23 @@ export default class InquiriesController {
     return inquiriesPage.serialize()
   }
 
+  public async myInquiries({ inertia, auth }: HttpContext) {
+    const currentUser = auth.use('web').user!
+    const inquiries = await Inquiry.query().where('userId', currentUser.id).orderBy('created_at', 'desc')
+    const user = {
+      id: currentUser.id,
+      name: currentUser.fullName,
+      email: currentUser.email,
+      address: currentUser.address,
+      phoneNumber: currentUser.phoneNumber,
+      role: currentUser.role,
+      // Assuming avatar is not yet implemented, set to undefined
+      avatar: undefined
+    }
+
+    return inertia.render('inquiries/my_inquiries', { inquiries , user})
+  }
+
   public async new({ inertia, auth }: HttpContext) {
     const vehicleMakes = await VehicleMake.all()
     const vehicleMakesData = vehicleMakes.map(make => ({ id: make.id, name: make.name }))
