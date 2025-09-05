@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react'
 import { Container, Paper, Typography } from '@mui/material'
-import InquiryForm from '~/pages/inquiries/form'
+import InquiryForm from '~/pages/Inquiries/form'
 import UserRoot from '~/shared/user_root'
 interface Props {
   vehicleMakes: { id: number; name: string }[]

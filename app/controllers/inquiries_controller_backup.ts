@@ -15,42 +15,45 @@ export default class InquiriesController {
 
     const inquiriesPage = await Inquiry.query()
       .orderBy('created_at', 'desc')
-      .preload('user', (userQuery) => {
+      .preload('user', (userQuery: any) => {
         userQuery.select('fullName', 'email')
       })
+      .preload('attachments') // Load attachments
       .paginate(page, limit)
 
     return inquiriesPage.serialize()
   }
 
   public async myInquiries({ inertia, auth }: HttpContext) {
-    const currentUser = auth.use('web').user!
-    
-    // Get inquiries with attachments
-    const inquiries = await Inquiry.query().where('userId', currentUser.id)
-      .orderBy('created_at', 'desc')
-      .preload('attachments')
-      .preload('make')
-      .preload('model')
+    try {
+      const currentUser = auth.use('web').user!
+      
+      // Get user's inquiries with attachments and related models
+      const inquiries = await Inquiry.query()
+        .where('userId', currentUser.id)
+        .orderBy('created_at', 'desc')
+        .preload('attachments')
+        .preload('make')
+        .preload('model')
+      
+      const user = {
+        id: currentUser.id,
+        name: currentUser.fullName,
+        email: currentUser.email,
+        address: currentUser.address,
+        phoneNumber: currentUser.phoneNumber,
+        role: currentUser.role,
+        avatar: undefined
+      }
 
-    const user = {
-      id: currentUser.id,
-      name: currentUser.fullName,
-      email: currentUser.email,
-      address: currentUser.address,
-      phoneNumber: currentUser.phoneNumber,
-      role: currentUser.role,
-      avatar: undefined
+      return inertia.render('inquiries/my_inquiries', { 
+        inquiries: inquiries.map(inquiry => inquiry.serialize()),
+        user: user
+      })
+    } catch (error) {
+      console.error('Error fetching user inquiries:', error)
+      return inertia.render('errors/server_error', { error: 'Failed to load inquiries' })
     }
-
-    return inertia.render('Inquiries/my_inquiries', { 
-      inquiries: inquiries.map(inquiry => {
-        const serialized = inquiry.serialize();
-        console.log('Serialized inquiry:', JSON.stringify(serialized, null, 2));
-        return serialized;
-      }),
-      user 
-    })
   }
 
   public async new({ inertia, auth }: HttpContext) {
@@ -68,7 +71,6 @@ export default class InquiriesController {
       address: currentUser.address,
       phoneNumber: currentUser.phoneNumber,
       role: currentUser.role,
-      // Assuming avatar is not yet implemented, set to undefined
       avatar: undefined
     }
     
@@ -79,7 +81,6 @@ export default class InquiriesController {
       user: user
     })
   }
-  
 
   public async create({ request, response, session, auth }: HttpContext) {
     try {
@@ -152,21 +153,16 @@ export default class InquiriesController {
       return inertia.render('errors/not_found', { error: 'Inquiry not found' })
     }
 
-    await inquiry.load('user', (userQuery) => {
-      userQuery.select('fullName', 'email')
-    })
-    
-    await inquiry.load('attachments')
-
     return inertia.render('inquiries/edit', { inquiry: inquiry.serialize() })
   }
+
   public async show({ params, inertia }: HttpContext) {
     const inquiry = await Inquiry.find(params.id)
     if (!inquiry) {
       return inertia.render('errors/not_found', { error: 'Inquiry not found' })
     }
 
-    await inquiry.load('user', (userQuery) => {
+    await inquiry.load('user', (userQuery: any) => {
       userQuery.select('fullName', 'email')
     })
     
@@ -174,7 +170,6 @@ export default class InquiriesController {
 
     return inertia.render('inquiries/show', { inquiry: inquiry.serialize() })
   }
-
 
   public async update({ params, request, response, session }: HttpContext) {
     const inquiry = await Inquiry.find(params.id)

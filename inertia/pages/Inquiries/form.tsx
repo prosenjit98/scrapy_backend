@@ -73,7 +73,19 @@ export default function InquiryForm({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setForm({ ...form, attachments: [...(form.attachments || []), ...files] });
+    
+    // Filter for photos and videos only
+    const validFiles = files.filter(file => {
+      const isImage = file.type.startsWith('image/');
+      const isVideo = file.type.startsWith('video/');
+      return isImage || isVideo;
+    });
+
+    if (validFiles.length !== files.length) {
+      alert('Only image and video files are allowed');
+    }
+
+    setForm({ ...form, attachments: [...(form.attachments || []), ...validFiles] });
   };
 
   const removeFile = (index: number) => {
@@ -229,7 +241,7 @@ export default function InquiryForm({
             />
 
             {/* Recording Button */}
-            <Box>
+``            {/* <Box>
               <Typography variant="body2" fontWeight="500" gutterBottom>
                 Personalise your inquiry
               </Typography>
@@ -254,57 +266,106 @@ export default function InquiryForm({
                   Click here to record
                 </Typography>
               </Paper>
-            </Box>
+            </Box> */}
 
-            {/* Loan Option */}
-            <Box>
-              <Typography variant="body2" gutterBottom>
-                Would you like a loan to finance this order?
-              </Typography>
-              <RadioGroup row>
-                <FormControlLabel
-                  value="yes"
-                  control={<Radio />}
-                  label="Yes"
-                />
-                <FormControlLabel
-                  value="no"
-                  control={<Radio />}
-                  label="No"
-                />
-              </RadioGroup>
-            </Box>
 
             {/* File Upload Section */}
             <Box>
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                Attachments (optional)
+                Photos & Videos (optional)
               </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Upload photos or videos of the required part. Max 10MB per file.
+              </Typography>
+              
               <Button
                 component="label"
                 variant="outlined"
                 startIcon={<CloudUploadIcon />}
                 sx={{ mb: 2 }}
               >
-                Upload Files
+                Upload Photos/Videos
                 <input
                   type="file"
                   hidden
                   multiple
-                  accept="image/*,.pdf,.doc,.docx"
+                  accept="image/*,video/*"
                   onChange={handleFileChange}
                 />
               </Button>
+              
               {form.attachments && form.attachments.length > 0 && (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                  {form.attachments.map((file, index) => (
-                    <Chip
-                      key={index}
-                      label={file.name}
-                      onDelete={() => removeFile(index)}
-                      variant="outlined"
-                    />
-                  ))}
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+                  {form.attachments.map((file, index) => {
+                    const isImage = file.type.startsWith('image/');
+                    const isVideo = file.type.startsWith('video/');
+                    const fileUrl = URL.createObjectURL(file);
+                    
+                    return (
+                      <Paper
+                        key={index}
+                        sx={{
+                          p: 1,
+                          position: 'relative',
+                          width: 120,
+                          height: 120,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        {isImage && (
+                          <img
+                            src={fileUrl}
+                            alt={file.name}
+                            style={{
+                              width: '100%',
+                              height: '80px',
+                              objectFit: 'cover',
+                              borderRadius: '4px'
+                            }}
+                          />
+                        )}
+                        {isVideo && (
+                          <video
+                            src={fileUrl}
+                            style={{
+                              width: '100%',
+                              height: '80px',
+                              objectFit: 'cover',
+                              borderRadius: '4px'
+                            }}
+                            muted
+                          />
+                        )}
+                        <Typography 
+                          variant="caption" 
+                          sx={{ 
+                            textAlign: 'center',
+                            wordBreak: 'break-all',
+                            fontSize: '10px',
+                            mt: 0.5
+                          }}
+                        >
+                          {file.name.length > 15 ? file.name.substring(0, 15) + '...' : file.name}
+                        </Typography>
+                        <Chip
+                          size="small"
+                          label="×"
+                          onClick={() => removeFile(index)}
+                          sx={{
+                            position: 'absolute',
+                            top: -8,
+                            right: -8,
+                            minWidth: 20,
+                            height: 20,
+                            '& .MuiChip-label': { px: 0 }
+                          }}
+                        />
+                      </Paper>
+                    );
+                  })}
                 </Box>
               )}
             </Box>

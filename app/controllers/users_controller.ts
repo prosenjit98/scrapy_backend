@@ -45,7 +45,7 @@ export default class UsersController {
     return response.redirect('/users')
   }
 
-  public async switch_to_selling({ params, auth, response, session }: HttpContext) {
+  public async switch_to_selling({ params, response, session }: HttpContext) {
     const user = await User.find(params.id)
     if (!user) {
       session.flash('error', 'User not found')
@@ -61,27 +61,7 @@ export default class UsersController {
     return response.redirect('/')
   }
 
-  public async switch_to_buying({ params, auth, response, session }: HttpContext) {
-    const user = await User.find(params.id)
-    if (!user) {
-      session.flash('error', 'User not found')
-      return response.redirect().back()
-    }
 
-    if (user.role === 'buyer') {
-      session.flash('error', 'User is already a buyer')
-      return response.redirect().back()
-    }
-
-    user.role = 'buyer'
-    await user.save()
-
-    // Re-authenticate the user to update the auth context
-    await auth.use('web').login(user)
-
-    session.flash('success', 'Switched to browsing mode successfully')
-    return response.redirect('/dashboard')
-  }
 
 
 
