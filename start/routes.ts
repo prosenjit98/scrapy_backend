@@ -30,6 +30,7 @@ const ApiUsersController = () => import('#controllers/api/users_controller')
 const ApiVehiclesController = () => import('#controllers/api/vehicles_controller')
 const ApiPartsController = () => import('#controllers/api/parts_controller')
 const ApiProposalsController = () => import('#controllers/api/proposals_controller')
+const ApiCommentsController = () => import('#controllers/api/comments_controller')
 
 router
   .group(() => {
@@ -114,6 +115,7 @@ router
         router.get('/models', [ApiVehiclesController, 'models']).as('api.models')
         router.get('/makes', [ApiVehiclesController, 'makes']).as('api.makes')
         router.resource('/proposals', ApiProposalsController).as('api.proposals')
+        router.resource('/proposals.comments', ApiCommentsController).apiOnly().as('api.proposals.comments')
       })
       .use(
         middleware.auth({
