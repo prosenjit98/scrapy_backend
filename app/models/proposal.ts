@@ -2,9 +2,8 @@ import { DateTime } from 'luxon'
 import User from './user.js'
 import Part from './part.js'
 import Comment from './comment.js'
-import type { BelongsTo,HasMany } from '@adonisjs/lucid/types/relations'
-import { BaseModel, belongsTo,hasMany, column } from '@adonisjs/lucid/orm'
-
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, hasMany, column } from '@adonisjs/lucid/orm'
 
 export default class Proposal extends BaseModel {
   @column({ isPrimary: true })

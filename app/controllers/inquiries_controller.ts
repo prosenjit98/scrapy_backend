@@ -25,9 +25,10 @@ export default class InquiriesController {
 
   public async myInquiries({ inertia, auth }: HttpContext) {
     const currentUser = auth.use('web').user!
-    
+
     // Get inquiries with attachments
-    const inquiries = await Inquiry.query().where('userId', currentUser.id)
+    const inquiries = await Inquiry.query()
+      .where('userId', currentUser.id)
       .orderBy('created_at', 'desc')
       .preload('attachments')
       .preload('make')
@@ -40,25 +41,25 @@ export default class InquiriesController {
       address: currentUser.address,
       phoneNumber: currentUser.phoneNumber,
       role: currentUser.role,
-      avatar: undefined
+      avatar: undefined,
     }
 
-    return inertia.render('Inquiries/my_inquiries', { 
-      inquiries: inquiries.map(inquiry => {
-        const serialized = inquiry.serialize();
-        console.log('Serialized inquiry:', JSON.stringify(serialized, null, 2));
-        return serialized;
+    return inertia.render('Inquiries/my_inquiries', {
+      inquiries: inquiries.map((inquiry) => {
+        const serialized = inquiry.serialize()
+        // console.log('Serialized inquiry:', JSON.stringify(serialized, null, 2))
+        return serialized
       }),
-      user 
+      user,
     })
   }
 
   public async new({ inertia, auth }: HttpContext) {
     const vehicleMakes = await VehicleMake.all()
-    const vehicleMakesData = vehicleMakes.map(make => ({ id: make.id, name: make.name }))
+    const vehicleMakesData = vehicleMakes.map((make) => ({ id: make.id, name: make.name }))
     const vehicleModels = await VehicleModel.all()
-    const vehicleModelsData = vehicleModels.map(model => ({ id: model.id, name: model.name }))
-    
+    const vehicleModelsData = vehicleModels.map((model) => ({ id: model.id, name: model.name }))
+
     // Get current user for the form
     const currentUser = auth.use('web').user!
     const user = {
@@ -69,58 +70,57 @@ export default class InquiriesController {
       phoneNumber: currentUser.phoneNumber,
       role: currentUser.role,
       // Assuming avatar is not yet implemented, set to undefined
-      avatar: undefined
+      avatar: undefined,
     }
-    
+
     console.log('Vehicle Makes:', vehicleMakesData)
-    return inertia.render('Inquiries/new', { 
-      vehicleMakes: vehicleMakesData, 
+    return inertia.render('Inquiries/new', {
+      vehicleMakes: vehicleMakesData,
       vehicleModels: vehicleModelsData,
-      user: user
+      user: user,
     })
   }
-  
 
   public async create({ request, response, session, auth }: HttpContext) {
     try {
       // Get the current authenticated user (middleware ensures this exists)
       const currentUser = auth.use('web').user!
-      
+
       // Get form data (excluding userId since we'll set it automatically)
       const formData = request.only(['vehicleMake', 'vehicleModel', 'partDescription', 'year'])
-      
+
       // Convert string values to numbers for foreign keys
       const inquiryData = {
-        vehicleMake: parseInt(formData.vehicleMake),
-        vehicleModel: parseInt(formData.vehicleModel),
+        vehicleMake: Number.parseInt(formData.vehicleMake),
+        vehicleModel: Number.parseInt(formData.vehicleModel),
         partDescription: formData.partDescription,
-        year: parseInt(formData.year)
+        year: Number.parseInt(formData.year),
       }
-      
+
       // Log the incoming data for debugging
       console.log('Incoming inquiry data:', inquiryData)
       console.log('Current user:', currentUser.id, currentUser.fullName)
-      
+
       // Create inquiry with current user's ID and default status
       const inquiry = await Inquiry.create({
         ...inquiryData,
         userId: currentUser.id, // Automatically set to current user
-        status: 'pending'
+        status: 'pending',
       })
 
       // Handle file attachments with validation for photos and videos
       const attachments = request.files('attachments', {
         size: '10mb', // Max 10MB per file
-        extnames: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'mov', 'avi', 'webm'] // Allowed file types
+        extnames: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'mov', 'avi', 'webm'], // Allowed file types
       })
-      
+
       if (attachments && attachments.length > 0) {
         for (const attachment of attachments) {
           if (attachment.isValid) {
             // Check file type
             const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(attachment.extname || '')
             const isVideo = ['mp4', 'mov', 'avi', 'webm'].includes(attachment.extname || '')
-            
+
             if (isImage || isVideo) {
               try {
                 await Attachment.attach(inquiry, attachment)
@@ -136,16 +136,16 @@ export default class InquiriesController {
           }
         }
       }
-      
+
       session.flash('success', 'Inquiry created successfully')
-      return response.redirect('/inquiries')
+      return response.redirect('/my_inquiries')
     } catch (error) {
       console.error('Error creating inquiry:', error)
       session.flash('error', `Failed to create inquiry: ${error.message}`)
       return response.redirect().back()
     }
   }
-  
+
   public async edit({ params, inertia }: HttpContext) {
     const inquiry = await Inquiry.find(params.id)
     if (!inquiry) {
@@ -155,7 +155,7 @@ export default class InquiriesController {
     await inquiry.load('user', (userQuery) => {
       userQuery.select('fullName', 'email')
     })
-    
+
     await inquiry.load('attachments')
 
     return inertia.render('inquiries/edit', { inquiry: inquiry.serialize() })
@@ -169,12 +169,11 @@ export default class InquiriesController {
     await inquiry.load('user', (userQuery) => {
       userQuery.select('fullName', 'email')
     })
-    
+
     await inquiry.load('attachments')
 
     return inertia.render('inquiries/show', { inquiry: inquiry.serialize() })
   }
-
 
   public async update({ params, request, response, session }: HttpContext) {
     const inquiry = await Inquiry.find(params.id)

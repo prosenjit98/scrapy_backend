@@ -46,7 +46,7 @@ export default class Inquiry extends BaseModel {
   @hasMany(() => Attachment, {
     foreignKey: 'attachableId',
     localKey: 'id',
-    onQuery: (query) => query.where('attachableType', 'Inquiry')
+    onQuery: (query) => query.where('attachableType', 'Inquiry'),
   })
   declare attachments: HasMany<typeof Attachment>
 }

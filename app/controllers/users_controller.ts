@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import User from "#models/user"
+import User from '#models/user'
 
 export default class UsersController {
   public async show({ params }: HttpContext) {
@@ -60,9 +60,4 @@ export default class UsersController {
     session.flash('success', 'Switched to selling mode successfully')
     return response.redirect('/')
   }
-
-
-
-
-
 }
