@@ -7,6 +7,7 @@ const signUpValidator = vine.compile(
     password: vine.string(),
     role: vine.enum(['user', 'vendor']),
     phoneNumber: vine.string().mobile(),
+    address: vine.string().trim().optional(),
   })
 )
 

@@ -6,6 +6,7 @@ import Attachment from '#models/attachment'
 export default class AuthController {
   public async login({ request, auth, response }: HttpContext) {
     const { email, password } = request.only(['email', 'password'])
+    console.log("--------------------", { email, password })
     try {
       const user = await User.verifyCredentials(email, password)
       const token = await auth.use('api').createToken(user)
@@ -40,13 +41,12 @@ export default class AuthController {
         }
         await Attachment.attach(user, avatar)
       }
-
       await user.load('profilePicture')
       const token = await User.accessTokens.create(user)
 
       return response.created({
         message: 'User registered successfully',
-        token: token.value!.release(),
+        token: token.toJSON(),
         user,
       })
     } catch (error) {
