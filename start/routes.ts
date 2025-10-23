@@ -107,7 +107,7 @@ router
       .group(() => {
         router.delete('/logout', [ApiSessionController, 'logout'])
         router.get('/dashboard', [ApiDashboardController, 'index']).as('api.dashboard')
-        router.resource('/users', ApiUsersController).only(['update']).as('api.users')
+        router.resource('/users', ApiUsersController).only(['update', 'show']).as('api.users')
         router.resource('/vehicles', ApiVehiclesController).apiOnly().as('api.vehicles')
         router.resource('/parts', ApiPartsController).apiOnly().as('api.parts')
         router.get('/models', [ApiVehiclesController, 'models']).as('api.models')
