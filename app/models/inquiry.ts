@@ -23,6 +23,9 @@ export default class Inquiry extends BaseModel {
   declare year: number
 
   @column()
+  declare title: string
+
+  @column()
   declare partDescription: string
 
   @column()
