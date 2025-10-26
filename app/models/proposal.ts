@@ -2,8 +2,9 @@ import { DateTime } from 'luxon'
 import User from './user.js'
 import Part from './part.js'
 import Comment from './comment.js'
-import type { BelongsTo,HasMany } from '@adonisjs/lucid/types/relations'
-import { BaseModel, belongsTo,hasMany, column } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, hasMany, column } from '@adonisjs/lucid/orm'
+import Inquiry from './inquiry.js'
 
 
 export default class Proposal extends BaseModel {
@@ -29,7 +30,10 @@ export default class Proposal extends BaseModel {
   declare quantity: number
 
   @column()
-  declare is_accepted: boolean
+  declare isAccepted: boolean
+
+  @column()
+  declare inquiryId: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -45,6 +49,9 @@ export default class Proposal extends BaseModel {
 
   @belongsTo(() => User, { foreignKey: 'proposerId' })
   declare proposer: BelongsTo<typeof User>
+
+  @belongsTo(() => Inquiry, { foreignKey: 'inquiryId' })
+  declare inquiry: BelongsTo<typeof Inquiry>
 
   @hasMany(() => Comment, { foreignKey: 'proposalId' })
   declare comments: HasMany<typeof Comment>

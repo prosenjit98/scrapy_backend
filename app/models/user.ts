@@ -8,6 +8,7 @@ import Attachment from './attachment.js'
 import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import Part from './part.js'
 import Proposal from './proposal.js'
+import Comment from './comment.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -55,6 +56,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => Proposal, {})
   declare proposals: HasMany<typeof Proposal>
+
+  @hasMany(() => Comment, {})
+  declare comments: HasMany<typeof Comment>
 
   // static async preComputeUrls(models: User | User[]) {
   //   if (Array.isArray(models)) {

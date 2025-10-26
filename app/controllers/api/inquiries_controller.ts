@@ -29,6 +29,13 @@ export default class InquiriesController {
         Inquiries.preload('attachments');
       }
       const inquiriesPage = await Inquiries.paginate(page, limit)
+
+      await Promise.all(
+        inquiriesPage.all().map(async (inquiry) => {
+          await inquiry.loadCount('proposals');
+        })
+      );
+
       return response.ok({ message: 'Inquiries fetched successfully', data: inquiriesPage })
     } catch (e) {
       console.error(e)

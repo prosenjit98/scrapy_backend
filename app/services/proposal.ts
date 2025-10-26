@@ -1,21 +1,39 @@
 import Proposal from '#models/proposal'
 
-export async function formatProposalResponse(proposal: Proposal) {
+interface FormatterOptions {
+  withParts: boolean;
+  withComments: boolean;
+}
+export async function formatProposalResponse(proposal: Proposal, options?: FormatterOptions) {
+  const { withParts, withComments } = options!
   await proposal.load((loader) => {
     loader
       .load('vendor', (vendorQuery) => {
         vendorQuery.select(['id', 'fullName']) // Select only needed fields
       })
-      .load('part', (partQuery) => {
+      .load('proposer', (proposerQuery) => {
+        proposerQuery.select(['id', 'fullName'])
+      })
+    if (withComments) {
+      loader.load('comments', (commentQuery) => {
+        commentQuery.select(['id', 'content', 'createdAt']).orderBy('createdAt', 'desc')
+          .preload('commenter', (userQuery) => {
+            userQuery.select('fullName', 'email')
+          })
+      })
+    }
+    if (withParts) {
+      loader.load('part', (partQuery) => {
         partQuery
           .select(['id', 'name', 'vehicle_make_id', 'vehicle_model_id'])
           .preload('make', (makeQuery) => {
-            makeQuery.select(['id', 'name'])
+            makeQuery.select(['id', 'name']);
           })
           .preload('model', (modelQuery) => {
-            modelQuery.select(['id', 'name'])
-          })
-      })
+            modelQuery.select(['id', 'name']);
+          });
+      });
+    }
   })
 
   return proposal

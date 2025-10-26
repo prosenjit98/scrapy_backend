@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo, hasMany, computed } from '@adonisjs/lucid/orm'
 import User from './user.js'
 import Attachment from './attachment.js'
 import VehicleMake from './vehicle_make.js'
 import VehicleModel from './vehicle_model.js'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import Proposal from './proposal.js'
 
 export default class Inquiry extends BaseModel {
   @column({ isPrimary: true })
@@ -52,4 +53,12 @@ export default class Inquiry extends BaseModel {
     onQuery: (query) => query.where('attachableType', 'Inquiry')
   })
   declare attachments: HasMany<typeof Attachment>
+
+  @hasMany(() => Proposal, { foreignKey: 'inquiryId' })
+  declare proposals: HasMany<typeof Proposal>
+
+  @computed()
+  public get proposalsCount() {
+    return this.$extras.proposals_count ?? 0;
+  }
 }
