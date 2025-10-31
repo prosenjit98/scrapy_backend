@@ -71,7 +71,7 @@ export default class ProposalsController {
       const withComments = request.input('withComments', false);
       const proposal = await Proposal.findOrFail(params.id)
       return response.ok({
-        message: 'Proposal created',
+        message: 'Proposal Found',
         data: await formatProposalResponse(proposal, { withParts, withComments }),
       })
     } catch (e) {
