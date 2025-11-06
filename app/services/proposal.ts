@@ -16,7 +16,7 @@ export async function formatProposalResponse(proposal: Proposal, options?: Forma
       })
     if (withComments) {
       loader.load('comments', (commentQuery) => {
-        commentQuery.select(['id', 'content', 'createdAt']).orderBy('createdAt', 'desc')
+        commentQuery.select(['id', 'content', 'createdAt', 'userId']).orderBy('createdAt', 'desc')
           .preload('commenter', (userQuery) => {
             userQuery.select('fullName', 'email')
           })

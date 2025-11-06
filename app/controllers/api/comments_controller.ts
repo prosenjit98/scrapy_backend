@@ -15,12 +15,12 @@ export default class CommentsController {
 
   public async store({ request, response, params }: HttpContext) {
     try {
-      const proposalId = params.id
-      const { content } = request.body()
-      
+      const proposalId = params.proposal_id
+      const { content, userId } = request.body()
       const comment = await Comment.create({
         content,
         proposalId,
+        userId
       })
 
       return response.created({ message: 'Comment created', data: comment })
@@ -54,7 +54,7 @@ export default class CommentsController {
     try {
       const commentId = params.id
       const { content } = request.body()
-      
+
       const comment = await Comment.findOrFail(commentId)
       comment.content = content
       await comment.save()
