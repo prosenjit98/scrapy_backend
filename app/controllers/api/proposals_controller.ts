@@ -1,5 +1,5 @@
 import Proposal from '#models/proposal'
-import { formatProposalResponse } from '#services/proposal'
+import { formatProposalResponse } from '#services/proposalService'
 import { proposalCreateValidator, proposalUpdateValidator } from '#validators/proposal'
 import type { HttpContext } from '@adonisjs/core/http'
 

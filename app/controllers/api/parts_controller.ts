@@ -1,6 +1,6 @@
 import Part from '#models/part'
 import User from '#models/user'
-import { formatPartResponse } from '#services/part'
+import { formatPartResponse } from '#services/partService'
 import { partCreateValidator, partUpdateValidator } from '#validators/part'
 import type { HttpContext } from '@adonisjs/core/http'
 
