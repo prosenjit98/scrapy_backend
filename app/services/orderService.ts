@@ -17,10 +17,12 @@ export const formatOrderResponse = async (order: Order, options?: { withParts?: 
   return {
     id: order.id,
     totalPrice: order.totalPrice,
+    quantity: order.quantity,
+    unitPrice: order.unitPrice,
     status: order.status,
     user: order.user?.fullName ?? null,
     vendor: withVendor ? order.vendor?.fullName ?? null : null,
-    part: withParts && part ? {
+    parts: withParts && part ? {
       id: part.id,
       name: part.name,
       vehicleMakeId: part.vehicleMakeId,

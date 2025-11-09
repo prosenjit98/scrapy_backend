@@ -30,10 +30,12 @@ export default class OrdersController {
 
   async store({ request, response }: HttpContext) {
     try {
+      console.log(request.body())
       const payload = await request.validateUsing(orderCreateValidator)
       const order = await Order.create(payload)
-      return response.ok({ message: 'Order created', data: formatOrderResponse(order) })
+      return response.ok({ message: 'Order created', data: formatOrderResponse(order, { withProposal: true }) })
     } catch (error) {
+      console.log(error)
       return response.badRequest({ message: 'Validation failed', errors: error.messages })
     }
   }
