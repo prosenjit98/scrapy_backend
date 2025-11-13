@@ -5,12 +5,12 @@ export async function formatPartResponse(part: Part) {
     loader.load('make').load('model').load('vendor')
   })
 
+
+  await part.load('images')
   const partRes = part.serialize()
 
   return {
     ...partRes,
     vendor_full_name: partRes.vendor?.fullName ?? null,
-    make: partRes.make?.name ?? null,
-    model: partRes.model?.name ?? null,
   }
 }

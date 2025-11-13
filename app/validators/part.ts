@@ -9,7 +9,7 @@ const partCreateValidator = vine.compile(
     condition: vine.enum(['new', 'used', 'refurbished']),
     price: vine.number(),
     is_available: vine.boolean(),
-    stock: vine.number().nullable(),
+    stock: vine.number(),
     vendorId: vine.number(),
   })
 )

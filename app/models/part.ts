@@ -46,7 +46,12 @@ export default class Part extends BaseModel {
   @belongsTo(() => User, { foreignKey: 'vendorId' })
   declare vendor: BelongsTo<typeof User>
 
-  @hasMany(() => Attachment)
+  @hasMany(() => Attachment, {
+    foreignKey: 'attachableId',
+    localKey: 'id',
+    onQuery: (query) => query.where('attachableType', 'Part')
+  })
+
   declare images: HasMany<typeof Attachment>
 
   // static async preComputeUrls(models: Part | Part[]) {
