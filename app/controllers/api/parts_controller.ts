@@ -8,6 +8,7 @@ import Attachment from '#models/attachment'
 export default class PartsController {
   public async index({ request, response }: HttpContext) {
     try {
+      console.log(request.all())
       const page = request.input('page', 1)
       const limit = request.input('limit', 10)
       const vendorId = request.input('vendorId', null)
