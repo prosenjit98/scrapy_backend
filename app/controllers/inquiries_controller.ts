@@ -37,7 +37,7 @@ export default class InquiriesController {
       avatar: undefined
     }
 
-    return inertia.render('inquiries/my_inquiries', { inquiries , user})
+    return inertia.render('inquiries/my_inquiries', { inquiries, user })
   }
 
   public async new({ inertia, auth }: HttpContext) {
@@ -45,7 +45,7 @@ export default class InquiriesController {
     const vehicleMakesData = vehicleMakes.map(make => ({ id: make.id, name: make.name }))
     const vehicleModels = await VehicleModel.all()
     const vehicleModelsData = vehicleModels.map(model => ({ id: model.id, name: model.name }))
-    
+
     // Get current user for the form
     const currentUser = auth.use('web').user!
     const user = {
@@ -58,24 +58,24 @@ export default class InquiriesController {
       // Assuming avatar is not yet implemented, set to undefined
       avatar: undefined
     }
-    
-    console.log('Vehicle Makes:', vehicleMakesData)
-    return inertia.render('inquiries/new', { 
-      vehicleMakes: vehicleMakesData, 
+
+
+    return inertia.render('inquiries/new', {
+      vehicleMakes: vehicleMakesData,
       vehicleModels: vehicleModelsData,
       user: user
     })
   }
-  
+
 
   public async create({ request, response, session, auth }: HttpContext) {
     try {
       // Get the current authenticated user (middleware ensures this exists)
       const currentUser = auth.use('web').user!
-      
+
       // Get form data (excluding userId since we'll set it automatically)
       const formData = request.only(['vehicleMake', 'vehicleModel', 'partDescription', 'year'])
-      
+
       // Convert string values to numbers for foreign keys
       const inquiryData = {
         vehicleMake: parseInt(formData.vehicleMake),
@@ -83,11 +83,11 @@ export default class InquiriesController {
         partDescription: formData.partDescription,
         year: parseInt(formData.year)
       }
-      
+
       // Log the incoming data for debugging
       console.log('Incoming inquiry data:', inquiryData)
       console.log('Current user:', currentUser.id, currentUser.fullName)
-      
+
       // Create inquiry with current user's ID and default status
       const inquiry = await Inquiry.create({
         ...inquiryData,
@@ -104,7 +104,7 @@ export default class InquiriesController {
           }
         }
       }
-      
+
       session.flash('success', 'Inquiry created successfully')
       return response.redirect('/inquiries')
     } catch (error) {
@@ -122,7 +122,7 @@ export default class InquiriesController {
     await inquiry.load('user', (userQuery) => {
       userQuery.select('fullName', 'email')
     })
-    
+
     await inquiry.load('attachments')
 
     return inertia.render('inquiries/edit', { inquiry: inquiry.serialize() })
@@ -136,7 +136,7 @@ export default class InquiriesController {
     await inquiry.load('user', (userQuery) => {
       userQuery.select('fullName', 'email')
     })
-    
+
     await inquiry.load('attachments')
 
     return inertia.render('inquiries/show', { inquiry: inquiry.serialize() })

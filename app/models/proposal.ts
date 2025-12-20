@@ -12,16 +12,23 @@ export default class Proposal extends BaseModel {
   @afterSave()
   static async updateRelatedProposals(proposal: Proposal) {
     console.log('afterSave hook triggered')
-    // After a proposal is saved, if isAccepted was changed to true,
-    // set isAccepted = false for other proposals with the same inquiryId.
+    // After a proposal is saved, if isSelfAccepted was changed to true,
+    // set isSelfAccepted = false for other proposals with the same inquiryId.
 
-    // only run when isAccepted was changed to true
-    if (proposal.isAccepted && proposal.$dirty && 'isAccepted' in proposal.$dirty) {
+    // only run when isSelfAccepted was changed to true
+    if (proposal.isSelfAccepted && proposal.$dirty && 'isSelfAccepted' in proposal.$dirty) {
       // update other proposals for the same inquiry, excluding the current one.
       await this.query()
         .where('inquiry_id', proposal.inquiryId) // DB column may be snake_case\
         .whereNot('id', proposal.id)
-        .update({ is_accepted: false }) // use DB column names
+        .update({ is_self_accepted: false }) // use DB column names
+    }
+    if (proposal.isOtherAccepted && proposal.$dirty && 'isOtherAccepted' in proposal.$dirty) {
+      // update other proposals for the same inquiry, excluding the current one.
+      await this.query()
+        .where('inquiry_id', proposal.inquiryId) // DB column may be snake_case\
+        .whereNot('id', proposal.id)
+        .update({ is_other_accepted: false }) // use DB column names
     }
   }
 
@@ -47,7 +54,10 @@ export default class Proposal extends BaseModel {
   declare quantity: number
 
   @column()
-  declare isAccepted: boolean
+  declare isSelfAccepted: boolean
+
+  @column()
+  declare isOtherAccepted: boolean
 
   @column()
   declare inquiryId: number

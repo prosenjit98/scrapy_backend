@@ -1,3 +1,4 @@
+import Part from '#models/part'
 import Proposal from '#models/proposal'
 import { formatProposalResponse } from '#services/proposalService'
 import { proposalCreateValidator, proposalUpdateValidator } from '#validators/proposal'
@@ -31,9 +32,7 @@ export default class ProposalsController {
         .preload('proposer', (proposalQuery) => {
           proposalQuery.select('fullName')
         })
-      console.log('withParts', withParts)
       if (withParts) {
-        console.log('loading parts')
         proposals.preload('part', (vehicleQuery) => {
           vehicleQuery
             .select('name', 'vehicleMakeId', 'vehicleModelId')
@@ -72,7 +71,6 @@ export default class ProposalsController {
       const withComments = request.input('withComments', false);
       const proposal = await Proposal.findOrFail(params.id)
       const data = await formatProposalResponse(proposal, { withParts, withComments })
-      console.log(data.serialize())
       return response.ok({
         message: 'Proposal Found',
         data: data,
@@ -89,11 +87,15 @@ export default class ProposalsController {
       let proposalExisting
       if (!!payload.inquiry_id) {
         proposalExisting = await Proposal.findByOrFail({ inquiryId: payload.inquiry_id, proposerId: payload.proposer_id })
-      } else if (!!payload.part_id) {
-        proposalExisting = await Proposal.findByOrFail({ partId: payload.part_id, proposerId: payload.proposer_id })
       }
+      // else if (!!payload.part_id) {
+      //   proposalExisting = await Proposal.findByOrFail({ partId: payload.part_id, proposerId: payload.proposer_id })
+      // }
       if (!!proposalExisting) {
         return response.badRequest({ message: 'Proposal already exists for this inquiry and proposer', data: {} })
+      }
+      if (!!payload.part_id) {
+        payload.vendor_id = (await Part.findOrFail(payload.part_id)).vendorId
       }
       const proposal = await Proposal.create(payload)
       return response.ok({

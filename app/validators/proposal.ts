@@ -21,7 +21,8 @@ const proposalUpdateValidator = vine.compile(
     proposer_id: vine.number().optional(),
     quantity: vine.number().optional(),
     vendor_id: vine.number().optional(),
-    is_accepted: vine.boolean().optional(),
+    is_self_accepted: vine.boolean().optional(),
+    is_other_accepted: vine.boolean().optional()
   })
 )
 
