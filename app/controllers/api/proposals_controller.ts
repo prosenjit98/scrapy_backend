@@ -10,7 +10,7 @@ export default class ProposalsController {
       const page = request.input('page', 1)
       const limit = request.input('limit', 100)
       const vendorId = request.input('vendorId', null)
-      const inquiryId = request.input('inquiry_id', null)
+      const inquiryId = request.input('inquiryId', null)
       const userId = request.input('userId', null)
       const withParts = request.input('withParts', false);
       const withComments = request.input('withComments', false);
