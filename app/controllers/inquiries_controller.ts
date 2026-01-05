@@ -172,7 +172,7 @@ export default class InquiriesController {
 
     await inquiry.load('attachments')
 
-    return inertia.render('inquiries/show', { inquiry: inquiry.serialize() })
+    return inertia.render('Inquiries/show', { inquiry: inquiry.serialize() })
   }
 
   public async update({ params, request, response, session }: HttpContext) {

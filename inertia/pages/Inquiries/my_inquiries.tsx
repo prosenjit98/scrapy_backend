@@ -23,6 +23,7 @@ export default function MyInquiries({ inquiries, user }: MyInquiriesProps) {
         <InquiryPost
           key={inquiry.id}
           inquiry={{
+            id: inquiry.id,
             vehicleMake: inquiry.vehicleMake,
             vehicleModel: inquiry.vehicleModel,
             partDescription: inquiry.partDescription,
