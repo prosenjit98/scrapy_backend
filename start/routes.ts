@@ -23,6 +23,7 @@ const AdminVehiclesMakeController = () => import('#controllers/admin/vehicle_mak
 const AdminVehicleModelController = () => import('#controllers/admin/vehicle_models_controller')
 const AdminProposalsController = () => import('#controllers/admin/proposals_controller')
 const AdminInquiriesController = () => import('#controllers/admin/inquiries_controller')
+const AdminOrdersController = () => import('#controllers/admin/orders_controller')
 
 const ApiSessionController = () => import('#controllers/api/auth_controller')
 const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
@@ -43,6 +44,8 @@ router
     router
       .group(() => {
         router.get('/dashboard', [AdminDashboardController, 'index']).as('admin.dashboard')
+        router.get('/orders/list', [AdminOrdersController, 'list']).as('admin.orders.list')
+        router.resource('/orders', AdminOrdersController).as('admin.orders')
         router.get('/users/list', [AdminUsersController, 'list']).as('admin.users.list')
         router.resource('/users', AdminUsersController)
         router.get('/vendors/list', [AdminVendorsController, 'list']).as('admin.vendors.list')
