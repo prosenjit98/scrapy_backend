@@ -19,6 +19,17 @@ export default class OrdersController {
         .if(userId, (query) => {
           query.where('user_id', userId)
         })
+      orders.preload('part', (vehicleQuery) => {
+        vehicleQuery
+          .select('name', 'vehicleMakeId', 'vehicleModelId')
+          .as('vehicle_model')
+          .preload('make', (makeQuery) => {
+            makeQuery.select('name')
+          })
+          .preload('model', (modelQuery) => {
+            modelQuery.select('name')
+          })
+      })
 
       const ordersPage = await orders.paginate(page, limit)
       const orderSerialize = ordersPage.serialize()
