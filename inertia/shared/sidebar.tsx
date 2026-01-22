@@ -71,6 +71,10 @@ export default function Sidebar() {
               <ListItemIcon><DashboardIcon /></ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
+            <ListItemButton href='orders' selected={'/admin/orders' === url ? true : false}>
+              <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
+              <ListItemText primary="Orders" />
+            </ListItemButton>
             <ListItemButton href='users' selected={'/admin/users' === url ? true : false}>
               <ListItemIcon><PeopleIcon /></ListItemIcon>
               <ListItemText primary="Users" />
