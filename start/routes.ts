@@ -24,6 +24,7 @@ const AdminVehicleModelController = () => import('#controllers/admin/vehicle_mod
 const AdminProposalsController = () => import('#controllers/admin/proposals_controller')
 const AdminInquiriesController = () => import('#controllers/admin/inquiries_controller')
 const AdminOrdersController = () => import('#controllers/admin/orders_controller')
+const AdminCategoriesController = () => import('#controllers/admin/categories_controller')
 
 const ApiSessionController = () => import('#controllers/api/auth_controller')
 const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
@@ -34,6 +35,7 @@ const ApiProposalsController = () => import('#controllers/api/proposals_controll
 const ApiCommentsController = () => import('#controllers/api/comments_controller')
 const ApiInquiriesController = () => import('#controllers/api/inquiries_controller')
 const ApiOrdersController = () => import('#controllers/api/orders_controller')
+const ApiCategoriesController = () => import('#controllers/api/categories_controller')
 
 router
   .group(() => {
@@ -66,6 +68,8 @@ router
         router.resource('/proposals', AdminProposalsController).as('admin.proposals')
         router.get('/inquiries/list', [AdminInquiriesController, 'list']).as('admin.inquiries.list')
         router.resource('/inquiries', AdminInquiriesController).as('admin.inquiries')
+        router.get('/categories/list', [AdminCategoriesController, 'list']).as('admin.categories.list')
+        router.resource('/categories', AdminCategoriesController).as('admin.categories')
       })
       .middleware(async ({ auth, response }, next) => {
         await auth.use('admin_web').check()
@@ -121,6 +125,7 @@ router
         router.resource('/proposals.comments', ApiCommentsController).apiOnly().as('api.proposals.comments')
         router.resource('/inquiries', ApiInquiriesController).apiOnly().as('api.inquiries')
         router.resource('/orders', ApiOrdersController).apiOnly().as('api.orders')
+        router.resource('/categories', ApiCategoriesController).apiOnly().as('api.categories')
       })
       .use(
         middleware.auth({

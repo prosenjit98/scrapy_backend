@@ -108,6 +108,10 @@ export default function Sidebar() {
               <ListItemIcon><SettingsRemoteIcon /></ListItemIcon>
               <ListItemText primary="Models" />
             </ListItemButton>
+            <ListItemButton href='categories' selected={'/admin/categories' === url ? true : false}>
+              <ListItemIcon><ChildFriendlyIcon /></ListItemIcon>
+              <ListItemText primary="Category" />
+            </ListItemButton>
             <Divider />
             <ListItemButton onClick={handleLogout}>
               <ListItemIcon><LogoutIcon /></ListItemIcon>

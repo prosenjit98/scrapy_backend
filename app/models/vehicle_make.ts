@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany, BelongsTo } from '@adonisjs/lucid/types/relations'
 import Part from './part.js'
 import Vehicle from './vehicle.js'
+import Category from './category.js'
 
 export default class VehicleMake extends BaseModel {
   @column({ isPrimary: true })
@@ -22,4 +23,7 @@ export default class VehicleMake extends BaseModel {
 
   @hasMany(() => Vehicle, {})
   declare vehicles: HasMany<typeof Vehicle>
+
+  @belongsTo(() => Category, { foreignKey: 'categoryId' })
+  declare category: BelongsTo<typeof Category>
 }
