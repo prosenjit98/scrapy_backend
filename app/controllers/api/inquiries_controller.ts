@@ -28,6 +28,11 @@ export default class InquiriesController {
       if (withAttachment) {
         Inquiries.preload('attachments');
       }
+
+      Inquiries.preload('proposals', (proposalQuery) => {
+        proposalQuery.select('id', 'proposerId', 'price', 'quantity', 'description')
+      })
+
       const inquiriesPage = await Inquiries.paginate(page, limit)
 
       await Promise.all(

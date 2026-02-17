@@ -7,13 +7,14 @@ interface FormatterOptions {
 export async function formatProposalResponse(proposal: Proposal, options?: FormatterOptions) {
   const { withParts, withComments } = options!
   await proposal.load((loader) => {
-    loader
-      .load('vendor', (vendorQuery) => {
+    if (proposal.vendorId) {
+      loader.load('vendor', (vendorQuery) => {
         vendorQuery.select(['id', 'fullName']) // Select only needed fields
       })
-      .load('proposer', (proposerQuery) => {
-        proposerQuery.select(['id', 'fullName'])
-      })
+    }
+    loader.load('proposer', (proposerQuery) => {
+      proposerQuery.select(['id', 'fullName'])
+    })
     if (withComments) {
       loader.load('comments', (commentQuery) => {
         commentQuery.select(['id', 'content', 'createdAt', 'userId']).orderBy('createdAt', 'asc')

@@ -86,7 +86,7 @@ export default class ProposalsController {
       const payload = await request.validateUsing(proposalCreateValidator)
       let proposalExisting
       if (!!payload.inquiry_id) {
-        proposalExisting = await Proposal.findByOrFail({ inquiryId: payload.inquiry_id, proposerId: payload.proposer_id })
+        proposalExisting = await Proposal.findBy({ inquiryId: payload.inquiry_id, proposerId: payload.proposer_id })
       }
       // else if (!!payload.part_id) {
       //   proposalExisting = await Proposal.findByOrFail({ partId: payload.part_id, proposerId: payload.proposer_id })

@@ -92,7 +92,6 @@ export default class PartsController {
       if (user?.role !== 'vendor') return { message: 'You are not a vendor', data: {} }
 
       const part = await Part.findOrFail(params.id)
-
       part.merge(payload)
       await part.save()
       if (attachments && attachments.length > 0) {
@@ -102,6 +101,7 @@ export default class PartsController {
           }
         }
       }
+      // console.log(partResponse)
       return response.ok({ message: 'Part Updated', data: await formatPartResponse(part) })
     } catch (e) {
       console.error(e)
