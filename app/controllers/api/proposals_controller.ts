@@ -12,7 +12,7 @@ export default class ProposalsController {
       const vendorId = request.input('vendorId', null)
       const inquiryId = request.input('inquiryId', null)
       const userId = request.input('userId', null)
-      const withParts = request.input('withParts', false);
+      // const withParts = request.input('withParts', false);
       const withComments = request.input('withComments', false);
 
       const proposals = Proposal.query()
@@ -32,19 +32,19 @@ export default class ProposalsController {
         .preload('proposer', (proposalQuery) => {
           proposalQuery.select('fullName')
         })
-      if (withParts) {
-        proposals.preload('part', (vehicleQuery) => {
-          vehicleQuery
-            .select('name', 'vehicleMakeId', 'vehicleModelId')
-            .as('vehicle_model')
-            .preload('make', (makeQuery) => {
-              makeQuery.select('name')
-            })
-            .preload('model', (modelQuery) => {
-              modelQuery.select('name')
-            })
-        })
-      }
+      // if (withParts) {
+      //   proposals.preload('part', (vehicleQuery) => {
+      //     vehicleQuery
+      //       .select('name', 'vehicleMakeId', 'vehicleModelId')
+      //       .as('vehicle_model')
+      //       .preload('make', (makeQuery) => {
+      //         makeQuery.select('name')
+      //       })
+      //       .preload('model', (modelQuery) => {
+      //         modelQuery.select('name')
+      //       })
+      //   })
+      // }
 
       if (withComments) {
         proposals.preload('comments', (commentQuery) => {
@@ -70,7 +70,7 @@ export default class ProposalsController {
       const withParts = request.input('withParts', false);
       const withComments = request.input('withComments', false);
       const proposal = await Proposal.findOrFail(params.id)
-      const data = await formatProposalResponse(proposal, { withParts, withComments })
+      const data = await formatProposalResponse(proposal, { withComments })
       return response.ok({
         message: 'Proposal Found',
         data: data,
@@ -100,7 +100,7 @@ export default class ProposalsController {
       const proposal = await Proposal.create(payload)
       return response.ok({
         message: 'Proposal created',
-        data: await formatProposalResponse(proposal, { withParts: true, withComments: true }),
+        data: await formatProposalResponse(proposal, { withComments: true }),
       })
     } catch (e) {
       console.log(e)
@@ -110,7 +110,7 @@ export default class ProposalsController {
 
   async update({ request, params, response }: HttpContext) {
     try {
-      const withParts = request.input('withPars', false);
+      // const withParts = request.input('withPars', false);
       const withComments = request.input('withComments', true);
       const payload = await request.validateUsing(proposalUpdateValidator)
 
@@ -120,7 +120,7 @@ export default class ProposalsController {
       await proposal.save()
       return response.ok({
         message: 'Proposal Updated',
-        data: await formatProposalResponse(proposal, { withParts, withComments }),
+        data: await formatProposalResponse(proposal, { withComments }),
       })
     } catch (e) {
       return response.badRequest({ message: 'Something went wrong', data: e })

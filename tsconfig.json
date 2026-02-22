@@ -5,6 +5,7 @@
     "outDir": "./build",
     "baseUrl": ".",
     "paths": {
+      "#utils/*": ["./app/utils/*"],
       "Admin/*": ["app/controllers/admin/*"]
     }
   },

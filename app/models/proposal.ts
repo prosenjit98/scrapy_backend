@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon'
 import User from './user.js'
-import Part from './part.js'
 import Comment from './comment.js'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
-import { BaseModel, belongsTo, hasMany, column, afterSave } from '@adonisjs/lucid/orm'
+import type { MorphManyRelationType } from '#utils/morph_relation'
+import { BaseModel, belongsTo, column, afterSave } from '@adonisjs/lucid/orm'
 import Inquiry from './inquiry.js'
+import { morphMany } from '#utils/morph_relation'
 
 
 export default class Proposal extends BaseModel {
@@ -19,16 +20,16 @@ export default class Proposal extends BaseModel {
     if (proposal.isSelfAccepted && proposal.$dirty && 'isSelfAccepted' in proposal.$dirty) {
       // update other proposals for the same inquiry, excluding the current one.
       await this.query()
-        .where('inquiry_id', proposal.inquiryId) // DB column may be snake_case\
+        .where('inquiry_id', proposal.inquiryId)
         .whereNot('id', proposal.id)
-        .update({ is_self_accepted: false }) // use DB column names
+        .update({ is_self_accepted: false })
     }
     if (proposal.isOtherAccepted && proposal.$dirty && 'isOtherAccepted' in proposal.$dirty) {
       // update other proposals for the same inquiry, excluding the current one.
       await this.query()
-        .where('inquiry_id', proposal.inquiryId) // DB column may be snake_case\
+        .where('inquiry_id', proposal.inquiryId)
         .whereNot('id', proposal.id)
-        .update({ is_other_accepted: false }) // use DB column names
+        .update({ is_other_accepted: false })
     }
   }
 
@@ -43,9 +44,6 @@ export default class Proposal extends BaseModel {
 
   @column()
   declare proposerId: number
-
-  @column()
-  declare partId: number
 
   @column()
   declare price: number
@@ -68,9 +66,6 @@ export default class Proposal extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @belongsTo(() => Part, { foreignKey: 'partId' })
-  declare part: BelongsTo<typeof Part>
-
   @belongsTo(() => User, { foreignKey: 'vendorId' })
   declare vendor: BelongsTo<typeof User>
 
@@ -80,6 +75,6 @@ export default class Proposal extends BaseModel {
   @belongsTo(() => Inquiry, { foreignKey: 'inquiryId' })
   declare inquiry: BelongsTo<typeof Inquiry>
 
-  @hasMany(() => Comment, { foreignKey: 'proposalId' })
-  declare comments: HasMany<typeof Comment>
+  @morphMany(Comment, 'commentable')
+  declare comments: MorphManyRelationType<typeof Comment>
 }
