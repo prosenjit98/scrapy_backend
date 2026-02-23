@@ -36,6 +36,7 @@ const ApiCommentsController = () => import('#controllers/api/comments_controller
 const ApiInquiriesController = () => import('#controllers/api/inquiries_controller')
 const ApiOrdersController = () => import('#controllers/api/orders_controller')
 const ApiCategoriesController = () => import('#controllers/api/categories_controller')
+const ApiBargainsController = () => import('#controllers/api/bargains_controller')
 
 router
   .group(() => {
@@ -123,6 +124,7 @@ router
         router.get('/makes', [ApiVehiclesController, 'makes']).as('api.makes')
         router.resource('/proposals', ApiProposalsController).as('api.proposals')
         router.resource('/proposals.comments', ApiCommentsController).apiOnly().as('api.proposals.comments')
+        router.resource('/bargains', ApiBargainsController).apiOnly().as('api.bargains')
         router.resource('/inquiries', ApiInquiriesController).apiOnly().as('api.inquiries')
         router.resource('/orders', ApiOrdersController).apiOnly().as('api.orders')
         router.resource('/categories', ApiCategoriesController).apiOnly().as('api.categories')
