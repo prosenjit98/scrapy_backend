@@ -9,6 +9,7 @@ import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import Part from './part.js'
 import Proposal from './proposal.js'
 import Comment from './comment.js'
+import VendorReview from './vendor_review.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -42,6 +43,16 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare phoneNumber: string | null
+
+  @column()
+  declare averageRating: number
+
+  @column()
+  declare reviewsCount: number
+
+
+  @hasMany(() => VendorReview)
+  declare reviews: HasMany<typeof VendorReview>
 
   @hasOne(() => Attachment, {
     foreignKey: 'attachableId',
@@ -86,4 +97,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   static users = scope((query) => {
     query.where('role', 'user')
   })
+
+  public async recalculateRating () {
+    const result = await VendorReview.query().where('vendor_id', this.id).where('status', 'active').avg('rating as avg')
+    const avgRating = Number(result[0].$extras.avg || 0)
+    this.averageRating = Number(avgRating.toFixed(2))
+    this.reviewsCount = await VendorReview.query().where('vendor_id', this.id).where('status', 'active').count('* as total').then(result => result[0].$extras.total)
+    await this.save()
+  }
 }
