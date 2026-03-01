@@ -3,27 +3,49 @@ import Comment from '#models/comment'
 
 
 export default class CommentsController {
-  public async index({ response, params }: HttpContext) {
+  // Helper method to serialize comment with commentable data
+  private async serializeCommentWithCommentable(comment: Comment) {
+    const commentable = await comment.getCommentable()
+    return {
+      ...comment.serialize(),
+      commentable: commentable ? commentable.serialize() : null
+    }
+  }
+
+  public async index({ response, request }: HttpContext) {
     try {
-      const proposalId = params.id
-      const comments = await Comment.query().where('proposalId', proposalId).preload('proposal')
-      return response.ok({ message: 'Comments found', data: comments })
+      const commentableType = request.input('commentableType')
+      const commentableId = request.input('commentableId')
+
+      const comments = await Comment.query()
+        .where('commentableType', commentableType)
+        .where('commentableId', commentableId)
+        .orderBy('createdAt', 'asc')
+        .preload('commenter')
+
+      const commentsWithCommentable = await Promise.all(
+        comments.map(comment => this.serializeCommentWithCommentable(comment))
+      )
+
+      return response.ok({ message: 'Comments found', data: commentsWithCommentable })
     } catch (error) {
       return response.internalServerError({ message: 'Failed to fetch comments', error: error.message })
     }
   }
 
-  public async store({ request, response, params }: HttpContext) {
+  public async store({ request, response }: HttpContext) {
     try {
-      const proposalId = params.proposal_id
-      const { content, userId } = request.body()
+      const { content, userId, commentableType, commentableId } = request.body()
       const comment = await Comment.create({
         content,
-        proposalId,
-        userId
+        userId,
+        commentableType,
+        commentableId
       })
 
-      return response.created({ message: 'Comment created', data: comment })
+      await comment.load('commenter')
+      const commentWithCommentable = await this.serializeCommentWithCommentable(comment)
+      return response.created({ message: 'Comment created', data: commentWithCommentable })
     } catch (error) {
       return response.internalServerError({ message: 'Failed to create comment', error: error.message })
     }
@@ -43,8 +65,9 @@ export default class CommentsController {
   public async show({ response, params }: HttpContext) {
     try {
       const commentId = params.id
-      const comment = await Comment.query().where('id', commentId).preload('proposal').firstOrFail()
-      return response.ok({ message: 'Comment found', data: comment })
+      const comment = await Comment.query().where('id', commentId).preload('commenter').firstOrFail()
+      const commentWithCommentable = await this.serializeCommentWithCommentable(comment)
+      return response.ok({ message: 'Comment found', data: commentWithCommentable })
     } catch (error) {
       return response.internalServerError({ message: 'Failed to fetch comment', error: error.message })
     }

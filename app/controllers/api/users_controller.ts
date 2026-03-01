@@ -4,7 +4,6 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class UsersController {
   public async show({ auth, response }: HttpContext) {
-    console.log("----------------- show user -------------------")
     const user = auth?.user as User
     try {
       if (user?.id) {

@@ -1,18 +1,29 @@
-import Proposal from '#models/proposal'
+import Bargain from '#models/bargain'
 
 interface FormatterOptions {
   withComments: boolean;
 }
-export async function formatProposalResponse(proposal: Proposal, options?: FormatterOptions) {
+
+export async function formatBargainResponse(bargain: Bargain, options?: FormatterOptions) {
   const { withComments } = options!
-  await proposal.load((loader) => {
-    if (proposal.vendorId) {
+  await bargain.load((loader) => {
+    if (bargain.vendorId) {
       loader.load('vendor', (vendorQuery) => {
         vendorQuery.select(['id', 'fullName'])
       })
     }
     loader.load('proposer', (proposerQuery) => {
       proposerQuery.select(['id', 'fullName'])
+    })
+    loader.load('part', (partQuery) => {
+      partQuery
+        .select(['id', 'name', 'vehicle_make_id', 'vehicle_model_id'])
+        .preload('make', (makeQuery) => {
+          makeQuery.select(['id', 'name']);
+        })
+        .preload('model', (modelQuery) => {
+          modelQuery.select(['id', 'name']);
+        });
     })
     if (withComments) {
       loader.load('comments', (commentQuery) => {
@@ -24,5 +35,5 @@ export async function formatProposalResponse(proposal: Proposal, options?: Forma
     }
   })
 
-  return proposal
+  return bargain
 }

@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { column, BaseModel, belongsTo } from '@adonisjs/lucid/orm'
-import Proposal from './proposal.js'
 import User from './user.js'
 
 export default class Comment extends BaseModel {
@@ -12,7 +11,10 @@ export default class Comment extends BaseModel {
   declare content: string
 
   @column()
-  declare proposalId: number
+  declare commentableType: string
+
+  @column()
+  declare commentableId: number
 
   @column()
   declare userId: number
@@ -23,10 +25,18 @@ export default class Comment extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @belongsTo(() => Proposal, { foreignKey: 'proposalId' })
-  declare proposal: BelongsTo<typeof Proposal>
-
   @belongsTo(() => User, { foreignKey: 'userId' })
   declare commenter: BelongsTo<typeof User>
 
+  // Polymorphic belongsTo - manually load the commentable
+  async getCommentable() {
+    if (this.commentableType === 'proposals') {
+      const { default: Proposal } = await import('./proposal.js')
+      return Proposal.find(this.commentableId)
+    } else if (this.commentableType === 'bargains') {
+      const { default: Bargain } = await import('./bargain.js')
+      return Bargain.find(this.commentableId)
+    }
+    return null
+  }
 }
