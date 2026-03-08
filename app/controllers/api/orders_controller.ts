@@ -43,6 +43,16 @@ export default class OrdersController {
     try {
       console.log(request.body())
       const payload = await request.validateUsing(orderCreateValidator)
+
+      // Set polymorphic fields based on proposalId or bargainId
+      if (payload.proposalId) {
+        payload.orderableType = 'proposals'
+        payload.orderableId = payload.proposalId
+      } else if (payload.bargainId) {
+        payload.orderableType = 'bargains'
+        payload.orderableId = payload.bargainId
+      }
+
       const order = await Order.create(payload)
       return response.ok({ message: 'Order created', data: formatOrderResponse(order, { withProposal: true }) })
     } catch (error) {
@@ -66,11 +76,13 @@ export default class OrdersController {
     }
 
     try {
+      console.log(order)
       const payload = await request.validateUsing(orderCreateValidator)
       order.merge(payload)
       await order.save()
       return response.ok({ message: 'Order updated', data: formatOrderResponse(order) })
     } catch (error) {
+      console.log(error)
       return response.badRequest({ message: 'Validation failed', errors: error.messages })
     }
   }

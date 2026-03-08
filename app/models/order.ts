@@ -4,6 +4,7 @@ import User from './user.js'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Part from './part.js'
 import Proposal from './proposal.js'
+import Bargain from './bargain.js'
 
 export default class Order extends BaseModel {
   @column({ isPrimary: true })
@@ -20,6 +21,12 @@ export default class Order extends BaseModel {
 
   @column()
   declare proposalId: number
+
+  @column()
+  declare orderableType: string
+
+  @column()
+  declare orderableId: number
 
   @column()
   declare unitPrice: number
@@ -51,4 +58,19 @@ export default class Order extends BaseModel {
   @belongsTo(() => User, { foreignKey: 'vendorId' })
   declare vendor: BelongsTo<typeof User>
 
+  // Polymorphic relationship - manually load the orderable
+  async getOrderable() {
+    if (this.orderableType === 'proposals') {
+      const { default: Proposal } = await import('./proposal.js')
+      return Proposal.find(this.orderableId)
+    } else if (this.orderableType === 'bargains') {
+      const { default: Bargain } = await import('./bargain.js')
+      return Bargain.find(this.orderableId)
+    }
+    // For backward compatibility, check proposalId
+    if (this.proposalId) {
+      return Proposal.find(this.proposalId)
+    }
+    return null
+  }
 }

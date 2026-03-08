@@ -14,6 +14,12 @@ export const formatOrderResponse = async (order: Order, options?: { withParts?: 
     await part?.load('model')
   }
 
+  // Load orderable (proposal or bargain)
+  let orderable = null
+  if (withProposal) {
+    orderable = await order.getOrderable()
+  }
+
   return {
     id: order.id,
     totalPrice: order.totalPrice,
@@ -36,6 +42,13 @@ export const formatOrderResponse = async (order: Order, options?: { withParts?: 
         name: part.model.name,
       } : null,
     } : null,
+    orderable: withProposal && orderable ? {
+      type: order.orderableType,
+      id: orderable.id,
+      price: orderable.price,
+      description: orderable.description,
+    } : null,
+    // Keep proposalId for backward compatibility
     proposal: withProposal ? order.proposalId ?? null : null,
   }
 }

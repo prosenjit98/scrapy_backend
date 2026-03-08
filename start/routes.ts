@@ -125,6 +125,7 @@ router
         router.resource('/proposals', ApiProposalsController).as('api.proposals')
         router.resource('/proposals.comments', ApiCommentsController).apiOnly().as('api.proposals.comments')
         router.resource('/bargains', ApiBargainsController).apiOnly().as('api.bargains')
+        router.resource('/bargains.comments', ApiCommentsController).apiOnly().as('api.bargains.comments')
         router.resource('/inquiries', ApiInquiriesController).apiOnly().as('api.inquiries')
         router.resource('/orders', ApiOrdersController).apiOnly().as('api.orders')
         router.resource('/categories', ApiCategoriesController).apiOnly().as('api.categories')

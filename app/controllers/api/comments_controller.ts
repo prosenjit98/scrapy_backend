@@ -12,14 +12,17 @@ export default class CommentsController {
     }
   }
 
-  public async index({ response, request }: HttpContext) {
+  public async index({ response, request, params }: HttpContext) {
     try {
+      // Get commentableType from frontend
       const commentableType = request.input('commentableType')
-      const commentableId = request.input('commentableId')
+
+      // Extract resource id from nested route params
+      let resourceId: any = params.proposal_id || params.bargain_id
 
       const comments = await Comment.query()
         .where('commentableType', commentableType)
-        .where('commentableId', commentableId)
+        .where('commentableId', resourceId)
         .orderBy('createdAt', 'asc')
         .preload('commenter')
 
@@ -33,14 +36,18 @@ export default class CommentsController {
     }
   }
 
-  public async store({ request, response }: HttpContext) {
+  public async store({ request, response, params }: HttpContext) {
     try {
-      const { content, userId, commentableType, commentableId } = request.body()
+      const { content, userId, commentableType } = request.body()
+
+      // Extract resource id from nested route params
+      const resourceId: any = params.proposal_id || params.bargain_id
+
       const comment = await Comment.create({
         content,
         userId,
         commentableType,
-        commentableId
+        commentableId: resourceId
       })
 
       await comment.load('commenter')
