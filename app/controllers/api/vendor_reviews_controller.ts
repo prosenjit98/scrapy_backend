@@ -39,29 +39,38 @@ export default class VendorReviewsController {
    * Handle form submission for the create action
    */
   async store({ request, response, auth }: HttpContext) {
-    const data = await request.validateUsing(vendorReviewCreateValidator)
-    const user = auth.user!
+    console.log('VendorReview store called with body:', request.body())
+    try {
+      const data = await request.validateUsing(vendorReviewCreateValidator)
+      const user = auth.user!
 
-    // Check if user has already reviewed this vendor
-    const existingReview = await VendorReview.query()
-      .where('user_id', user.id)
-      .where('vendor_id', data.vendor_id)
-      .first()
+      // Check if user has already reviewed this vendor
+      const existingReview = await VendorReview.query()
+        .where('user_id', user.id)
+        .where('vendor_id', data.vendor_id)
+        .first()
 
-    if (existingReview) {
-      return response.badRequest({ message: 'You have already reviewed this vendor' })
+      if (existingReview) {
+        return response.badRequest({ message: 'You have already reviewed this vendor' })
+      }
+
+      const review = await VendorReview.create({
+        userId: user.id,
+        vendorId: data.vendor_id,
+        rating: data.rating,
+        comment: data.comment,
+        status: 'active',
+        flagged: false,
+      })
+
+      console.log('Created review:', review)
+
+      return response.created({ message: 'Review created', data: review })
+    } catch (e) {
+      console.error('VendorReview store error:', e)
+      const message = e instanceof Error ? e.message : 'Something went wrong'
+      return response.badRequest({ message })
     }
-
-    const review = await VendorReview.create({
-      userId: user.id,
-      vendorId: data.vendor_id,
-      rating: data.rating,
-      comment: data.comment,
-      status: 'active',
-      flagged: false,
-    })
-
-    return response.created(review)
   }
 
   /**

@@ -98,11 +98,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
     query.where('role', 'user')
   })
 
-  public async recalculateRating () {
+  public async recalculateRating() {
     const result = await VendorReview.query().where('vendor_id', this.id).where('status', 'active').avg('rating as avg')
     const avgRating = Number(result[0].$extras.avg || 0)
     this.averageRating = Number(avgRating.toFixed(2))
-    this.reviewsCount = await VendorReview.query().where('vendor_id', this.id).where('status', 'active').count('* as total').then(result => result[0].$extras.total)
+    const countResult = await VendorReview.query().where('vendor_id', this.id).where('status', 'active').count('* as total')
+    this.reviewsCount = Number(countResult[0].$extras.total || 0)
     await this.save()
   }
 }
