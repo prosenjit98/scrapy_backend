@@ -25,6 +25,7 @@ const AdminProposalsController = () => import('#controllers/admin/proposals_cont
 const AdminInquiriesController = () => import('#controllers/admin/inquiries_controller')
 const AdminOrdersController = () => import('#controllers/admin/orders_controller')
 const AdminCategoriesController = () => import('#controllers/admin/categories_controller')
+const AdminVendorReviewsController = () => import('#controllers/admin/vendor_reviews_controller')
 
 const ApiSessionController = () => import('#controllers/api/auth_controller')
 const ApiDashboardController = () => import('#controllers/api/dashboard_controller')
@@ -36,6 +37,7 @@ const ApiCommentsController = () => import('#controllers/api/comments_controller
 const ApiInquiriesController = () => import('#controllers/api/inquiries_controller')
 const ApiOrdersController = () => import('#controllers/api/orders_controller')
 const ApiCategoriesController = () => import('#controllers/api/categories_controller')
+const ApiVendorReviewsController = () => import('#controllers/api/vendor_reviews_controller')
 const ApiBargainsController = () => import('#controllers/api/bargains_controller')
 
 router
@@ -71,6 +73,8 @@ router
         router.resource('/inquiries', AdminInquiriesController).as('admin.inquiries')
         router.get('/categories/list', [AdminCategoriesController, 'list']).as('admin.categories.list')
         router.resource('/categories', AdminCategoriesController).as('admin.categories')
+        // router.get('/vendor_reviews/list', [AdminVendorReviewsController, 'list']).as('admin.vendor_reviews.list')
+        router.resource('/vendor_reviews', AdminVendorReviewsController).as('admin.vendor_reviews')
       })
       .middleware(async ({ auth, response }, next) => {
         await auth.use('admin_web').check()
@@ -129,6 +133,8 @@ router
         router.resource('/inquiries', ApiInquiriesController).apiOnly().as('api.inquiries')
         router.resource('/orders', ApiOrdersController).apiOnly().as('api.orders')
         router.resource('/categories', ApiCategoriesController).apiOnly().as('api.categories')
+        // router.get('/vendor_reviews', [ApiVendorReviewsController, 'index']).as('api.vendor_reviews.index')
+        router.resource('/vendor_reviews', ApiVendorReviewsController).apiOnly().as('api.vendor_reviews')
       })
       .use(
         middleware.auth({
