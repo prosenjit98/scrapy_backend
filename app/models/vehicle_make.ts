@@ -18,6 +18,9 @@ export default class VehicleMake extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
+  @column()
+  declare categoryId: number | null
+
   @hasMany(() => Part, {})
   declare parts: HasMany<typeof Part>
 

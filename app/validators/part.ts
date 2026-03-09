@@ -10,7 +10,7 @@ const partCreateValidator = vine.compile(
     price: vine.number(),
     is_available: vine.boolean(),
     stock: vine.number(),
-    vendorId: vine.number(),
+    vendor_id: vine.number().optional(),
   })
 )
 

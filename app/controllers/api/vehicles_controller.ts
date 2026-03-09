@@ -31,13 +31,23 @@ export default class VehiclesController {
     return response.ok({ message: 'Vehicles found', data: vehicles })
   }
 
-  public async models({ response }: HttpContext) {
-    const vehicleModels = await VehicleModel.all()
+  public async models({ request, response }: HttpContext) {
+    const makeId = request.input('makeId', null)
+    const query = VehicleModel.query().orderBy('name', 'asc')
+    if (makeId) {
+      query.where('vehicle_make_id', makeId)
+    }
+    const vehicleModels = await query
     return response.ok({ message: 'Models found', data: vehicleModels })
   }
 
-  public async makes({ response }: HttpContext) {
-    const vehicleModels = await VehicleMake.all()
-    return response.ok({ message: 'Makes found', data: vehicleModels })
+  public async makes({ request, response }: HttpContext) {
+    const categoryId = request.input('categoryId', null)
+    const query = VehicleMake.query().orderBy('name', 'asc')
+    if (categoryId) {
+      query.where('category_id', categoryId)
+    }
+    const vehicleMakes = await query
+    return response.ok({ message: 'Makes found', data: vehicleMakes })
   }
 }

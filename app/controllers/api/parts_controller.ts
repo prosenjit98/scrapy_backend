@@ -69,6 +69,7 @@ export default class PartsController {
       if (user?.role !== 'vendor')
         return response.forbidden({ message: 'You are not a vendor', data: {} })
       const payload = await request.validateUsing(partCreateValidator)
+      payload.vendor_id = user.id
       const part = await Part.create(payload)
       if (attachments && attachments.length > 0) {
         for (const attachment of attachments) {

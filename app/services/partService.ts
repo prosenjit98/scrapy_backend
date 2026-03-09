@@ -2,11 +2,11 @@ import Part from '#models/part'
 
 export async function formatPartResponse(part: Part) {
   await part.load((loader) => {
-    loader.load('make').load('model').load('vendor')
+    loader.load('make', (makeQuery) => {
+      makeQuery.preload('category')
+    }).load('model').load('vendor').load('images')
   })
 
-
-  await part.load('images')
   const partRes = part.serialize()
 
   return {
