@@ -4,7 +4,7 @@ import User from './user.js'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Part from './part.js'
 import Proposal from './proposal.js'
-import Bargain from './bargain.js'
+// import Bargain from './bargain.js'
 
 export default class Order extends BaseModel {
   @column({ isPrimary: true })

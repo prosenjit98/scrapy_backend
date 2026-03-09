@@ -3,7 +3,7 @@
 import Order from '#models/order'
 
 export const formatOrderResponse = async (order: Order, options?: { withParts?: boolean; withVendor?: boolean, withProposal?: boolean }) => {
-  const { withParts, withVendor, withProposal } = options!
+  const { withParts, withVendor, withProposal } = options ?? {}
 
   await order.load('user')
   if (withVendor) await order.load('vendor')

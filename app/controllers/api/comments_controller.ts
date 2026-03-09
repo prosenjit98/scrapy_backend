@@ -52,8 +52,10 @@ export default class CommentsController {
 
       await comment.load('commenter')
       const commentWithCommentable = await this.serializeCommentWithCommentable(comment)
+      console.log('Created comment:', commentWithCommentable)
       return response.created({ message: 'Comment created', data: commentWithCommentable })
     } catch (error) {
+      console.log(error)
       return response.internalServerError({ message: 'Failed to create comment', error: error.message })
     }
   }

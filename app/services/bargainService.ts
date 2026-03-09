@@ -1,4 +1,5 @@
 import Bargain from '#models/bargain'
+import Order from '#models/order'
 
 interface FormatterOptions {
   withComments: boolean;
@@ -35,5 +36,13 @@ export async function formatBargainResponse(bargain: Bargain, options?: Formatte
     }
   })
 
-  return bargain
+  const order = await Order.query()
+    .where('orderable_type', 'bargains')
+    .where('orderable_id', bargain.id)
+    .first()
+
+  const serialized = bargain.serialize()
+  serialized.orderCreated = !!order
+
+  return serialized
 }

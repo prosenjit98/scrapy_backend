@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Order from '../../models/order.js'
-import { orderCreateValidator } from '#validators/order'
+import { orderCreateValidator, orderUpdateValidator } from '#validators/order'
 import { formatOrderResponse } from '#services/orderService'
 
 export default class OrdersController {
@@ -76,8 +76,7 @@ export default class OrdersController {
     }
 
     try {
-      console.log(order)
-      const payload = await request.validateUsing(orderCreateValidator)
+      const payload = await request.validateUsing(orderUpdateValidator)
       order.merge(payload)
       await order.save()
       return response.ok({ message: 'Order updated', data: formatOrderResponse(order) })

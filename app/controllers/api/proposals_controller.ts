@@ -1,3 +1,4 @@
+import Inquiry from '#models/inquiry'
 import Part from '#models/part'
 import Proposal from '#models/proposal'
 import { formatProposalResponse } from '#services/proposalService'
@@ -31,6 +32,9 @@ export default class ProposalsController {
         })
         .preload('proposer', (proposalQuery) => {
           proposalQuery.select('fullName')
+        })
+        .preload('inquiry', (inquiryQuery) => {
+          inquiryQuery.select('id', 'userId')
         })
       // if (withParts) {
       //   proposals.preload('part', (vehicleQuery) => {
@@ -108,16 +112,45 @@ export default class ProposalsController {
     }
   }
 
-  async update({ request, params, response }: HttpContext) {
+  async update({ request, params, response, auth }: HttpContext) {
     try {
-      // const withParts = request.input('withPars', false);
       const withComments = request.input('withComments', true);
       const payload = await request.validateUsing(proposalUpdateValidator)
 
       const proposal = await Proposal.findOrFail(params.id)
+      await proposal.load('inquiry')
+
+      const currentUserId = auth.user!.id
+      const isProposer = currentUserId === proposal.proposerId
+      const isInquiryCreator = currentUserId === proposal.inquiry.userId
+
+      // Authorization: only inquiry creator can set is_other_accepted
+      if (payload.is_other_accepted !== undefined && !isInquiryCreator) {
+        return response.forbidden({ message: 'Only the inquiry creator can accept/reject proposals' })
+      }
+
+      // Authorization: only proposer (vendor) can set is_self_accepted
+      if (payload.is_self_accepted !== undefined && !isProposer) {
+        return response.forbidden({ message: 'Only the proposer can accept/reject their proposal' })
+      }
+
+      // Flow enforcement: vendor can only accept after inquiry creator has accepted
+      if (payload.is_self_accepted === true && !proposal.isOtherAccepted) {
+        return response.badRequest({ message: 'The inquiry creator must accept the proposal first' })
+      }
 
       proposal.merge(payload)
       await proposal.save()
+
+      // Update inquiry status when both parties have accepted
+      if (proposal.isSelfAccepted && proposal.isOtherAccepted && proposal.inquiryId) {
+        const inquiry = await Inquiry.find(proposal.inquiryId)
+        if (inquiry && inquiry.status !== 'accepted') {
+          inquiry.status = 'accepted'
+          await inquiry.save()
+        }
+      }
+
       return response.ok({
         message: 'Proposal Updated',
         data: await formatProposalResponse(proposal, { withComments }),
